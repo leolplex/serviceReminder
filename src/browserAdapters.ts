@@ -6,6 +6,28 @@ const keys = {
   email: 'service-reminder-email',
 }
 
+const emailLocks = new Map<string, Promise<void>>()
+
+export const withEmailLock = async <T>(weekStart: string, task: () => Promise<T>) => {
+  const lockName = `service-reminder-email-${weekStart}`
+  const previous = emailLocks.get(lockName) ?? Promise.resolve()
+  let release: () => void = () => undefined
+  const current = new Promise<void>((resolve) => { release = resolve })
+  const queued = previous.then(() => current)
+  emailLocks.set(lockName, queued)
+
+  await previous
+  try {
+    if (typeof navigator !== 'undefined' && 'locks' in navigator) {
+      return await navigator.locks.request(lockName, task)
+    }
+    return await task()
+  } finally {
+    release()
+    if (emailLocks.get(lockName) === queued) emailLocks.delete(lockName)
+  }
+}
+
 export class LocalStorageProfileStore implements ProfileStore {
   private readonly storage: Storage
 

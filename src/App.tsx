@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ACUEDUCTO_SOURCE_URL } from './acueductoScraper'
+import { withEmailLock } from './browserAdapters'
 import { emailIsValid } from './emailService'
 import { emailNotifier, outageSource, profileStore, scheduler, userNotifier } from './norityServices'
 import { addressIsReady, noticeAppliesToAddress, nextSundayAtSixPm, type OutageNotice } from './outageLogic'
@@ -64,11 +65,12 @@ function App() {
       setSyncStatus(`${fetchedNotices.length} avisos encontrados`)
       if (sendEmail && email && emailNotifier.configured) {
         const matchingNotices = fetchedNotices.filter((notice) => noticeAppliesToAddress(notice, localidad, weekStart, address))
-        if (matchingNotices.length > 0 && !await profileStore.hasSentEmail(weekStart)) {
+        if (matchingNotices.length > 0) await withEmailLock(weekStart, async () => {
+          if (await profileStore.hasSentEmail(weekStart)) return
           await emailNotifier.send(email, address, matchingNotices)
           await profileStore.markEmailSent(weekStart)
           setSyncStatus(`Aviso enviado a ${email}`)
-        }
+        })
       }
       const matchingNotices = fetchedNotices.filter((notice) => noticeAppliesToAddress(notice, localidad, weekStart, address))
       if (notificationsEnabled && matchingNotices.length > 0 && !await profileStore.hasSentNotification(weekStart)) {

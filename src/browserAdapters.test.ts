@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { LocalStorageProfileStore } from './browserAdapters'
+import { LocalStorageProfileStore, withEmailLock } from './browserAdapters'
 
 const memoryStorage = (): Storage => {
   const values = new Map<string, string>()
@@ -25,5 +25,17 @@ describe('LocalStorageProfileStore', () => {
     await expect(store.hasSentEmail('2026-08-24')).resolves.toBe(false)
     await store.markEmailSent('2026-08-24')
     await expect(store.hasSentEmail('2026-08-24')).resolves.toBe(true)
+  })
+
+  it('serializes email tasks for the same week', async () => {
+    const events: string[] = []
+    const first = withEmailLock('2026-08-24', async () => {
+      events.push('first-start')
+      await new Promise((resolve) => setTimeout(resolve, 5))
+      events.push('first-end')
+    })
+    const second = withEmailLock('2026-08-24', async () => events.push('second'))
+    await Promise.all([first, second])
+    expect(events).toEqual(['first-start', 'first-end', 'second'])
   })
 })

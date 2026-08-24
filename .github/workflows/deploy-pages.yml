@@ -34,6 +34,7 @@ jobs:
       - name: Update official outage snapshot
         run: node scripts/update-outages.mjs
       - name: Send weekly email when address is affected
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: node scripts/send-weekly-email.mjs
         env:
           EMAILJS_SERVICE_ID: ${{ secrets.EMAILJS_SERVICE_ID }}
