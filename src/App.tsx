@@ -33,6 +33,7 @@ function App() {
   const [syncStatus, setSyncStatus] = useState('Sin consultar')
   const [saved, setSaved] = useState(false)
   const [feedback, setFeedback] = useState<Feedback | null>(null)
+  const [activationInProgress, setActivationInProgress] = useState(false)
 
   const notifyUser = (type: Feedback['type'], message: string) => {
     setFeedback({ type, message })
@@ -49,8 +50,8 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (profileLoaded) void profileStore.save({ localidad, address, email })
-  }, [address, email, localidad, profileLoaded])
+    if (profileLoaded && !activationInProgress) void profileStore.save({ localidad, address, email })
+  }, [activationInProgress, address, email, localidad, profileLoaded])
 
   const localNotices = useMemo(() => notices.filter((notice) => noticeAppliesToAddress(notice, localidad, weekStart, address)), [address, localidad, notices, weekStart])
   const hasOutage = localNotices.length > 0
@@ -104,12 +105,21 @@ function App() {
   }
 
   const saveLocalidad = async () => {
+    if (!localidad || !addressIsReady(address) || !emailIsValid(email)) {
+      const message = 'Completa una dirección, localidad y correo válidos.'
+      setSyncStatus(message)
+      notifyUser('error', message)
+      return
+    }
+
     const normalizedAddress = address.trim()
+    const normalizedEmail = email.trim()
+    setActivationInProgress(true)
     try {
-      await profileStore.save({ address: normalizedAddress, localidad, email: email.trim() })
-      if (emailIsValid(email.trim())) {
-        await emailNotifier.sendTest(email.trim(), normalizedAddress, localidad)
-        setSyncStatus(`Correo de prueba enviado a ${email.trim()}`)
+      await profileStore.save({ address: normalizedAddress, localidad, email: normalizedEmail })
+      if (emailIsValid(normalizedEmail)) {
+        await emailNotifier.sendTest(normalizedEmail, normalizedAddress, localidad)
+        setSyncStatus(`Correo de prueba enviado a ${normalizedEmail}`)
         notifyUser('success', `Suscripción activada. Revisa ${email.trim()}.`)
       } else {
         setSyncStatus('Escribe un correo válido para activar la suscripción')
@@ -122,6 +132,8 @@ function App() {
       const detail = error instanceof Error ? error.message : 'No se pudo guardar la suscripción'
       setSyncStatus(`No se pudo activar la suscripción: ${detail}`)
       notifyUser('error', `No se pudo activar la suscripción: ${detail}`)
+    } finally {
+      setActivationInProgress(false)
     }
   }
 
@@ -150,7 +162,7 @@ function App() {
         <input className="address-input" id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="tu-correo@ejemplo.com" />
         <label htmlFor="localidad">Localidad de Bogotá</label>
         <div className="select-wrap"><select id="localidad" value={localidad} onChange={(event) => setLocalidad(event.target.value)}><option value="">Elige una localidad...</option>{LOCALIDADES.map((item) => <option key={item} value={item}>{item}</option>)}</select><span>⌄</span></div>
-        <button className="primary-button" type="button" disabled={!localidad || !addressIsReady(address) || !emailIsValid(email)} onClick={saveLocalidad}>{saved ? '✓ Suscripción activada' : 'Activar suscripción'}</button>
+        <button className="primary-button" type="button" disabled={activationInProgress || !localidad || !addressIsReady(address) || !emailIsValid(email)} onClick={saveLocalidad}>{activationInProgress ? 'Activando suscripción...' : saved ? '✓ Suscripción activada' : 'Activar suscripción'}</button>
       </section>
 
       <section className={`status-panel ${hasOutage ? 'alert' : ''}`}>
