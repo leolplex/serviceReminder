@@ -13,6 +13,7 @@ export interface OutageSource {
 export interface EmailNotifier {
   readonly configured: boolean
   send(email: string, address: string, notices: OutageNotice[]): Promise<void>
+  sendTest(email: string, address: string, localidad: string): Promise<void>
 }
 
 export interface ProfileStore {

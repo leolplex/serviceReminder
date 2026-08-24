@@ -19,6 +19,12 @@ npm install
 npm run dev
 ```
 
+## Producción
+
+La aplicación publicada en GitHub Pages está disponible en:
+
+https://leolplex.github.io/serviceReminder/
+
 Validación:
 
 ```bash

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ACUEDUCTO_SOURCE_URL } from './acueductoScraper'
+import { emailIsValid } from './emailService'
 import { emailNotifier, outageSource, profileStore, scheduler, userNotifier } from './norityServices'
 import { addressIsReady, noticeAppliesToAddress, nextSundayAtSixPm, type OutageNotice } from './outageLogic'
 
@@ -95,7 +96,20 @@ function App() {
   }
 
   const saveLocalidad = async () => {
-    await profileStore.save({ address: address.trim() })
+    const normalizedAddress = address.trim()
+    await profileStore.save({ address: normalizedAddress, localidad, email: email.trim() })
+    if (emailNotifier.configured && emailIsValid(email.trim())) {
+      try {
+        await emailNotifier.sendTest(email.trim(), normalizedAddress, localidad)
+        setSyncStatus(`Correo de prueba enviado a ${email.trim()}`)
+      } catch {
+        setSyncStatus('Suscripción guardada, pero no se pudo enviar el correo de prueba')
+      }
+    } else if (!emailIsValid(email.trim())) {
+      setSyncStatus('Escribe un correo válido para activar la suscripción')
+    } else {
+      setSyncStatus('Suscripción guardada. Configura EmailJS para recibir el correo de prueba')
+    }
     await requestNotifications()
     setSaved(true)
     window.setTimeout(() => setSaved(false), 2200)
@@ -124,7 +138,7 @@ function App() {
         <input className="address-input" id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="tu-correo@ejemplo.com" />
         <label htmlFor="localidad">Localidad de Bogotá</label>
         <div className="select-wrap"><select id="localidad" value={localidad} onChange={(event) => setLocalidad(event.target.value)}><option value="">Elige una localidad...</option>{LOCALIDADES.map((item) => <option key={item} value={item}>{item}</option>)}</select><span>⌄</span></div>
-        <button className="primary-button" type="button" disabled={!localidad || !addressIsReady(address)} onClick={saveLocalidad}>{saved ? '✓ Dirección guardada' : 'Guardar dirección y localidad'}</button>
+        <button className="primary-button" type="button" disabled={!localidad || !addressIsReady(address) || !emailIsValid(email)} onClick={saveLocalidad}>{saved ? '✓ Suscripción activada' : 'Activar suscripción'}</button>
       </section>
 
       <section className={`status-panel ${hasOutage ? 'alert' : ''}`}>

@@ -18,6 +18,15 @@ export const weeklyEmailParams = (email: string, address: string, notices: Outag
   hours: notices.map((notice) => notice.hours ?? 'Consultar fuente oficial').join(' | '),
 })
 
+export const testEmailParams = (email: string, address: string, localidad: string) => ({
+  to_email: email,
+  address,
+  locality: localidad,
+  outage_date: 'Correo de prueba',
+  neighborhoods: 'Este mensaje confirma que tu suscripción está activa.',
+  hours: 'No es un aviso de corte real.',
+})
+
 export const sendWeeklyOutageEmail = async (email: string, address: string, notices: OutageNotice[]) => {
   if (!emailIsValid(email) || notices.length === 0) return
   if (!emailIsConfigured) throw new Error('EmailJS no está configurado')
@@ -25,10 +34,21 @@ export const sendWeeklyOutageEmail = async (email: string, address: string, noti
   await emailjs.send(serviceId, templateId, weeklyEmailParams(email, address, notices), { publicKey })
 }
 
+export const sendSubscriptionTestEmail = async (email: string, address: string, localidad: string) => {
+  if (!emailIsValid(email)) return
+  if (!emailIsConfigured) throw new Error('EmailJS no está configurado')
+
+  await emailjs.send(serviceId, templateId, testEmailParams(email, address, localidad), { publicKey })
+}
+
 export class EmailJsNotifier implements EmailNotifier {
   readonly configured = emailIsConfigured
 
   async send(email: string, address: string, notices: OutageNotice[]) {
     await sendWeeklyOutageEmail(email, address, notices)
+  }
+
+  async sendTest(email: string, address: string, localidad: string) {
+    await sendSubscriptionTestEmail(email, address, localidad)
   }
 }
