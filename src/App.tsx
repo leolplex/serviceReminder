@@ -20,6 +20,7 @@ const currentMonday = () => {
 }
 
 const currentDateLabel = () => new Date().toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' })
+type Feedback = { type: 'success' | 'error'; message: string }
 
 function App() {
   const [localidad, setLocalidad] = useState('')
@@ -31,6 +32,12 @@ function App() {
   const [notices, setNotices] = useState<OutageNotice[]>([])
   const [syncStatus, setSyncStatus] = useState('Sin consultar')
   const [saved, setSaved] = useState(false)
+  const [feedback, setFeedback] = useState<Feedback | null>(null)
+
+  const notifyUser = (type: Feedback['type'], message: string) => {
+    setFeedback({ type, message })
+    window.setTimeout(() => setFeedback(null), 5000)
+  }
 
   useEffect(() => {
     void profileStore.load().then((profile) => {
@@ -69,6 +76,7 @@ function App() {
       }
     } catch {
       setSyncStatus('No se pudo consultar (revisa CORS o conexión)')
+      notifyUser('error', 'No se pudo consultar el boletín de Acueducto.')
     }
   }, [address, email, localidad, notificationsEnabled, weekStart])
 
@@ -102,8 +110,10 @@ function App() {
       if (emailIsValid(email.trim())) {
         await emailNotifier.sendTest(email.trim(), normalizedAddress, localidad)
         setSyncStatus(`Correo de prueba enviado a ${email.trim()}`)
+        notifyUser('success', `Suscripción activada. Revisa ${email.trim()}.`)
       } else {
         setSyncStatus('Escribe un correo válido para activar la suscripción')
+        notifyUser('error', 'Escribe un correo válido para activar la suscripción.')
       }
       await requestNotifications()
       setSaved(true)
@@ -111,6 +121,7 @@ function App() {
     } catch (error) {
       const detail = error instanceof Error ? error.message : 'No se pudo guardar la suscripción'
       setSyncStatus(`No se pudo activar la suscripción: ${detail}`)
+      notifyUser('error', `No se pudo activar la suscripción: ${detail}`)
     }
   }
 
@@ -128,6 +139,8 @@ function App() {
         <h1>Que el corte<br /><em>no te tome por sorpresa.</em></h1>
         <p className="intro-copy">Guarda tu localidad y revisa el boletín dominical de acueducto. Nority encuentra tu zona y te avisa.</p>
       </section>
+
+      {feedback && <div className={`feedback-toast ${feedback.type}`} role={feedback.type === 'error' ? 'alert' : 'status'}><span aria-hidden="true">{feedback.type === 'success' ? '✓' : '!'}</span>{feedback.message}</div>}
 
       <section className="panel locality-panel">
         <div className="step-heading"><span className="step-number">01</span><div><h2>Tu dirección</h2><p>Solo se guarda en este dispositivo</p></div></div>

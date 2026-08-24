@@ -75,6 +75,13 @@ button { cursor: pointer; }
 .intro h1 { margin: 14px 0 16px; font-family: 'Palatino Linotype', 'Book Antiqua', Georgia, serif; font-size: 62px; line-height: .98; letter-spacing: 0; color: #fff2d2; text-shadow: 0 2px 18px rgba(8, 15, 27, .18); }
 .intro h1 em { color: #df9f6a; font-weight: 400; }
 .intro-copy { max-width: 500px; color: #b9c6c5; font-size: 16px; line-height: 1.55; }
+.feedback-toast { display: flex; gap: 10px; align-items: center; margin: -10px 0 14px; border: 1px solid; border-radius: 6px; padding: 13px 15px; font-size: 13px; font-weight: 700; box-shadow: 0 10px 24px rgba(3, 10, 20, .2); animation: feedback-in .25s ease-out; }
+.feedback-toast span { width: 23px; height: 23px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; color: white; font-weight: 800; }
+.feedback-toast.success { border-color: #86a77f; background: #e5f0de; color: #315b3d; }
+.feedback-toast.success span { background: #588461; }
+.feedback-toast.error { border-color: #d28a6f; background: #f8dfc8; color: #8f3e35; }
+.feedback-toast.error span { background: #b95745; }
+@keyframes feedback-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
 
 .panel, .status-panel { border: 1px solid rgba(226, 192, 124, .31); border-radius: 8px; background: rgba(245, 234, 207, .97); color: #203343; }
 .panel { padding: 25px; }
