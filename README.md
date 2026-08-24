@@ -35,26 +35,21 @@ npm run lint
 
 ## EmailJS
 
-EmailJS funciona en Strict mode mediante la Edge Function `send-subscription-email` de Supabase. La Private Key nunca se envía al navegador.
-
-En Supabase Dashboard ve a **Edge Functions → Create a new function**, crea `send-subscription-email` y pega el contenido de `supabase/functions/send-subscription-email/index.ts`. Después configura estos secretos en **Edge Functions → Manage secrets**:
+La aplicación llama directamente a EmailJS desde el navegador. En EmailJS desactiva **Strict mode** y agrega este origen permitido:
 
 ```text
-EMAILJS_SERVICE_ID=service_xxxxxxx
-EMAILJS_TEMPLATE_ID=template_xxxxxxx
-EMAILJS_PUBLIC_KEY=public_xxxxxxx
-EMAILJS_PRIVATE_KEY=tu_private_key
+https://leolplex.github.io
 ```
 
-Despliega la función desde el Dashboard con `verify_jwt` desactivado. Esta opción permite que el navegador complete el preflight CORS; la función solo acepta `POST` y el origen de GitHub Pages. No necesitas crear un token de Supabase en GitHub.
+Para desarrollo, copia `.env.example` como `.env.local` y completa las variables `VITE_EMAILJS_*`.
 
-La plantilla debe aceptar `to_email`, `address`, `locality`, `outage_date`, `neighborhoods` y `hours`. El correo de activación se envía desde la Edge Function después de guardar la suscripción.
+La plantilla debe aceptar `to_email`, `address`, `locality`, `outage_date`, `neighborhoods` y `hours`. El correo de activación se envía después de guardar la suscripción.
 
-Para GitHub Pages y el envío semanal configura estos GitHub Secrets en **Settings > Secrets and variables > Actions**: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID`, `EMAILJS_PUBLIC_KEY` y `EMAILJS_PRIVATE_KEY`. El workflow leerá los perfiles guardados en Supabase y enviará los avisos desde GitHub Actions. Las claves `SUPABASE_SECRET_KEY` y `EMAILJS_PRIVATE_KEY` nunca deben ir en el frontend.
+Para GitHub Pages y el envío semanal configura estos GitHub Secrets en **Settings > Secrets and variables > Actions**: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID` y `EMAILJS_PUBLIC_KEY`. El workflow leerá los perfiles guardados en Supabase y enviará los avisos desde GitHub Actions.
 
 Ejecuta primero el SQL de `supabase/schema.sql` y habilita el proveedor de autenticación anónima en Supabase. `SUPABASE_PUBLISHABLE_KEY` puede estar en el frontend; `SUPABASE_SECRET_KEY` debe existir únicamente como secret del workflow.
 
-La URL y la clave publicable de Supabase sí se configuran como `VITE_*` para el frontend. Nunca pongas contraseñas, tokens privados o credenciales SMTP en `.env.local` ni en el repositorio.
+La clave pública de EmailJS y las variables `VITE_*` se pueden exponer en el frontend. Nunca pongas contraseñas, tokens privados o credenciales SMTP en `.env.local` ni en el repositorio.
 
 ## Fuente oficial
 
