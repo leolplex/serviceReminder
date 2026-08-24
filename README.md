@@ -43,8 +43,10 @@ Instala y autentica Supabase CLI, enlaza el proyecto y configura los secretos:
 supabase login
 supabase link --project-ref TU_PROJECT_REF
 supabase secrets set EMAILJS_SERVICE_ID=service_xxxxxxx EMAILJS_TEMPLATE_ID=template_xxxxxxx EMAILJS_PUBLIC_KEY=public_xxxxxxx EMAILJS_PRIVATE_KEY=tu_private_key
-supabase functions deploy send-subscription-email
+supabase functions deploy send-subscription-email --no-verify-jwt
 ```
+
+El archivo `supabase/config.toml` conserva esta configuración para futuros despliegues. `--no-verify-jwt` permite que el navegador complete el preflight CORS; la función solo acepta `POST` y el origen de GitHub Pages.
 
 La plantilla debe aceptar `to_email`, `address`, `locality`, `outage_date`, `neighborhoods` y `hours`. El correo de activación se envía desde la Edge Function después de guardar la suscripción.
 
