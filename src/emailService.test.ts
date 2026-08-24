@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { emailIsValid, sendWeeklyOutageEmail, weeklyEmailParams } from './emailService'
+import { emailIsValid, sendWeeklyOutageEmail, testEmailParams, weeklyEmailParams } from './emailService'
 
 describe('weekly email', () => {
   it('builds a readable EmailJS payload', () => {
@@ -10,6 +10,17 @@ describe('weekly email', () => {
 
   it('does not call the provider when there is no matching outage', async () => {
     await expect(sendWeeklyOutageEmail('ana@example.com', 'Cra. 96I #51-99', [])).resolves.toBeUndefined()
+  })
+
+  it('builds the subscription confirmation payload', () => {
+    expect(testEmailParams('ana@example.com', 'Cra. 96I #51-99', 'Engativá')).toEqual({
+      to_email: 'ana@example.com',
+      address: 'Cra. 96I #51-99',
+      locality: 'Engativá',
+      outage_date: 'Correo de prueba',
+      neighborhoods: 'Este mensaje confirma que tu suscripción está activa.',
+      hours: 'No es un aviso de corte real.',
+    })
   })
 
   it('rejects malformed or oversized recipient addresses', () => {
