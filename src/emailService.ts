@@ -1,11 +1,8 @@
 import type { OutageNotice } from './outageLogic'
 import type { EmailNotifier } from './ports'
+import { supabase, supabaseIsConfigured } from './supabaseClient'
 
-const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
-const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
-const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-
-export const emailIsConfigured = Boolean(serviceId && templateId && publicKey)
+export const emailIsConfigured = supabaseIsConfigured
 export const emailIsValid = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) && email.length <= 254
 
 export const weeklyEmailParams = (email: string, address: string, notices: OutageNotice[]) => ({
@@ -26,32 +23,24 @@ export const testEmailParams = (email: string, address: string, localidad: strin
   hours: 'No es un aviso de corte real.',
 })
 
-const sendDirectly = async (templateParams: Record<string, string>) => {
-  const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      service_id: serviceId,
-      template_id: templateId,
-      user_id: publicKey,
-      template_params: templateParams,
-    }),
-  })
-  if (!response.ok) throw new Error(`EmailJS respondió ${response.status}: ${await response.text()}`)
+const sendThroughFunction = async (templateParams: Record<string, string>) => {
+  if (!supabase) throw new Error('Supabase no está configurado')
+  const { error } = await supabase.functions.invoke('send-subscription-email', { body: templateParams })
+  if (error) throw error
 }
 
 export const sendWeeklyOutageEmail = async (email: string, address: string, notices: OutageNotice[]) => {
   if (!emailIsValid(email) || notices.length === 0) return
   if (!emailIsConfigured) throw new Error('EmailJS no está configurado')
 
-  await sendDirectly(weeklyEmailParams(email, address, notices))
+  await sendThroughFunction(weeklyEmailParams(email, address, notices))
 }
 
 export const sendSubscriptionTestEmail = async (email: string, address: string, localidad: string) => {
   if (!emailIsValid(email)) return
   if (!emailIsConfigured) throw new Error('EmailJS no está configurado')
 
-  await sendDirectly(testEmailParams(email, address, localidad))
+  await sendThroughFunction(testEmailParams(email, address, localidad))
 }
 
 export class EmailJsNotifier implements EmailNotifier {

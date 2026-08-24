@@ -39,22 +39,21 @@ jobs:
           EMAILJS_SERVICE_ID: ${{ secrets.EMAILJS_SERVICE_ID }}
           EMAILJS_TEMPLATE_ID: ${{ secrets.EMAILJS_TEMPLATE_ID }}
           EMAILJS_PUBLIC_KEY: ${{ secrets.EMAILJS_PUBLIC_KEY }}
+          EMAILJS_PRIVATE_KEY: ${{ secrets.EMAILJS_PRIVATE_KEY }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
       - name: Verify EmailJS configuration
-        run: test -n "$EMAILJS_SERVICE_ID" && test -n "$EMAILJS_TEMPLATE_ID" && test -n "$EMAILJS_PUBLIC_KEY"
+        run: test -n "$EMAILJS_SERVICE_ID" && test -n "$EMAILJS_TEMPLATE_ID" && test -n "$EMAILJS_PUBLIC_KEY" && test -n "$EMAILJS_PRIVATE_KEY"
         env:
           EMAILJS_SERVICE_ID: ${{ secrets.EMAILJS_SERVICE_ID }}
           EMAILJS_TEMPLATE_ID: ${{ secrets.EMAILJS_TEMPLATE_ID }}
           EMAILJS_PUBLIC_KEY: ${{ secrets.EMAILJS_PUBLIC_KEY }}
+          EMAILJS_PRIVATE_KEY: ${{ secrets.EMAILJS_PRIVATE_KEY }}
       - name: Build
         run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
-          VITE_EMAILJS_SERVICE_ID: ${{ secrets.EMAILJS_SERVICE_ID }}
-          VITE_EMAILJS_TEMPLATE_ID: ${{ secrets.EMAILJS_TEMPLATE_ID }}
-          VITE_EMAILJS_PUBLIC_KEY: ${{ secrets.EMAILJS_PUBLIC_KEY }}
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

@@ -35,21 +35,26 @@ npm run lint
 
 ## EmailJS
 
-La aplicación llama directamente a EmailJS desde el navegador. En EmailJS desactiva **Strict mode** y agrega este origen permitido:
+La aplicación envía los correos mediante la Edge Function `send-subscription-email` de Supabase. EmailJS puede permanecer en **Strict mode**; la Private Key nunca llega al navegador.
+
+En Supabase configura los secretos de la función:
 
 ```text
-https://leolplex.github.io
+EMAILJS_SERVICE_ID=service_xxxxxxx
+EMAILJS_TEMPLATE_ID=template_xxxxxxx
+EMAILJS_PUBLIC_KEY=public_xxxxxxx
+EMAILJS_PRIVATE_KEY=tu_private_key
 ```
 
-Para desarrollo, copia `.env.example` como `.env.local` y completa las variables `VITE_EMAILJS_*`.
+Despliega el contenido de `supabase/functions/send-subscription-email/index.ts` como una Edge Function con el nombre `send-subscription-email` y desactiva la verificación JWT para esa función. El archivo `supabase/config.toml` contiene esta configuración.
 
 La plantilla debe aceptar `to_email`, `address`, `locality`, `outage_date`, `neighborhoods` y `hours`. El correo de activación se envía después de guardar la suscripción.
 
-Para GitHub Pages y el envío semanal configura estos GitHub Secrets en **Settings > Secrets and variables > Actions**: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID` y `EMAILJS_PUBLIC_KEY`. El workflow leerá los perfiles guardados en Supabase y enviará los avisos desde GitHub Actions.
+Para GitHub Pages y el envío semanal configura estos GitHub Secrets en **Settings > Secrets and variables > Actions**: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID`, `EMAILJS_PUBLIC_KEY` y `EMAILJS_PRIVATE_KEY`. El workflow leerá los perfiles guardados en Supabase y enviará los avisos desde GitHub Actions.
 
 Ejecuta primero el SQL de `supabase/schema.sql` y habilita el proveedor de autenticación anónima en Supabase. `SUPABASE_PUBLISHABLE_KEY` puede estar en el frontend; `SUPABASE_SECRET_KEY` debe existir únicamente como secret del workflow.
 
-La clave pública de EmailJS y las variables `VITE_*` se pueden exponer en el frontend. Nunca pongas contraseñas, tokens privados o credenciales SMTP en `.env.local` ni en el repositorio.
+La `SUPABASE_PUBLISHABLE_KEY` puede exponerse en el frontend. Nunca pongas `EMAILJS_PRIVATE_KEY`, `SUPABASE_SECRET_KEY` ni credenciales SMTP en `.env.local` ni en el repositorio.
 
 ## Fuente oficial
 
