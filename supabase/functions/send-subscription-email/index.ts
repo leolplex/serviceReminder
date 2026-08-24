@@ -10,12 +10,37 @@ Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
   if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405)
 
+  const authorization = request.headers.get('Authorization')
+  if (!authorization?.startsWith('Bearer ')) return json({ error: 'Authentication required' }, 401)
+
+  const accessToken = authorization.slice('Bearer '.length)
+  const userResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/auth/v1/user`, {
+    headers: {
+      apikey: Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+  if (!userResponse.ok) return json({ error: 'Invalid authentication' }, 401)
+  const user = await userResponse.json()
+
   const missing = required.filter((name) => !Deno.env.get(name))
   if (missing.length > 0) return json({ error: `Missing server configuration: ${missing.join(', ')}` }, 500)
 
   const params = await request.json().catch(() => null)
   if (!params || typeof params.to_email !== 'string' || !isValidEmail(params.to_email)) {
     return json({ error: 'A valid recipient email is required' }, 400)
+  }
+
+  const profileResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/rest/v1/profiles?select=email,address,localidad&user_id=eq.${encodeURIComponent(user.id)}`, {
+    headers: {
+      apikey: Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+  if (!profileResponse.ok) return json({ error: 'Could not verify subscription profile' }, 502)
+  const [profile] = await profileResponse.json()
+  if (!profile || profile.email !== params.to_email || profile.address !== params.address || profile.localidad !== params.locality) {
+    return json({ error: 'Subscription profile does not match the authenticated user' }, 403)
   }
 
   const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
