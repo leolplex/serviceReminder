@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises'
 
-const required = ['EMAILJS_SERVICE_ID', 'EMAILJS_TEMPLATE_ID', 'EMAILJS_PUBLIC_KEY', 'SUPABASE_URL', 'SUPABASE_SECRET_KEY']
+const required = ['EMAILJS_SERVICE_ID', 'EMAILJS_TEMPLATE_ID', 'EMAILJS_PUBLIC_KEY', 'EMAILJS_PRIVATE_KEY', 'SUPABASE_URL', 'SUPABASE_SECRET_KEY']
 const missing = required.filter((name) => !process.env[name])
 if (missing.length > 0) {
 	console.log(`Email omitido: faltan secrets ${missing.join(', ')}`)
@@ -44,6 +44,7 @@ for (const profile of profiles) {
 		service_id: process.env.EMAILJS_SERVICE_ID,
 		template_id: process.env.EMAILJS_TEMPLATE_ID,
 		user_id: process.env.EMAILJS_PUBLIC_KEY,
+		accessToken: process.env.EMAILJS_PRIVATE_KEY,
 		template_params: {
 			to_email: profile.email,
 			address: profile.address,
