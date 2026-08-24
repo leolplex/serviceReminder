@@ -98,12 +98,13 @@ function App() {
   const saveLocalidad = async () => {
     const normalizedAddress = address.trim()
     await profileStore.save({ address: normalizedAddress, localidad, email: email.trim() })
-    if (emailNotifier.configured && emailIsValid(email.trim())) {
+    if (emailIsValid(email.trim())) {
       try {
         await emailNotifier.sendTest(email.trim(), normalizedAddress, localidad)
         setSyncStatus(`Correo de prueba enviado a ${email.trim()}`)
-      } catch {
-        setSyncStatus('Suscripción guardada, pero no se pudo enviar el correo de prueba')
+      } catch (error) {
+        const detail = error instanceof Error ? error.message : 'EmailJS rechazó la solicitud'
+        setSyncStatus(`Suscripción guardada, pero falló el correo: ${detail}`)
       }
     } else if (!emailIsValid(email.trim())) {
       setSyncStatus('Escribe un correo válido para activar la suscripción')
