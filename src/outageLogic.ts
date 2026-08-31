@@ -10,6 +10,59 @@ export type OutageNotice = {
 export const normalize = (value: string) =>
   value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim()
 
+/**
+ * Nomenclatura vial de Bogotá.
+ * Eje de calles (paralelas a calles): Calle, Avenida Calle (AC), Av. Calle, Cll, Cl,
+ *                                     Callejón (Cj), Diagonal (Dg).
+ * Eje de carreras (paralelas a carreras): Carrera, Avenida Carrera (AK), Av. Carrera,
+ *                                         Cra, Kra, Transversal (Tv/Tr), Circular (Circ).
+ */
+const VIA_CALLE = '(?:avenida\\s+calle|av\\.?\\s*calle|ac\\.?|calle|cll|cl\\.?|callejon|cj\\.?|diagonal|dg\\.?)'
+const VIA_CARRERA = '(?:avenida\\s+carrera|av\\.?\\s*carrera|ak\\.?|carrera|cra\\.?|kra\\.?|transversal|transv\\.?|tv\\.?|tr\\.?|circular|circ\\.?)'
+
+/** Número de vía con sufijos: 42, 61B, 53 Bis, 82G Bis, 70D, 1A, 68 Sur, 12D Este */
+const VIA_NUMBER = '(\\d{1,4}[a-z]{0,2}(?:\\s*bis)?)'
+
+/** Número de vía con orientación (Sur, Este, Norte, Occidente) para rangos del boletín */
+const VIA_NUMBER_RANGE = `(${VIA_NUMBER})(?:\\s*(?:sur|norte|este|occidente))?`
+
+/** Palabras clave de cada eje para clasificar el prefijo capturado */
+const CALLE_KEYWORDS = ['calle', 'cll', 'cl', 'callejon', 'cj', 'ac', 'diagonal', 'dg']
+
+const addressNumbers = (address: string) => {
+  const match = normalize(address).match(new RegExp(`(${VIA_CALLE}|${VIA_CARRERA})\\s*${VIA_NUMBER}(?:\\s*(?:sur|norte|este|occidente))?[^\\d]*#?\\s*(\\d{1,4}[a-z]{0,2})`))
+  if (!match) return undefined
+  const via = match[1]
+  const first = Number.parseInt(match[2], 10)
+  const second = Number.parseInt(match[3], 10)
+  const isCalle = CALLE_KEYWORDS.some((keyword) => via.includes(keyword))
+  return isCalle
+    ? { street: first, carrera: second }
+    : { street: second, carrera: first }
+}
+
+/**
+ * Extrae todos los números de un tipo de vía (calle o carrera) mencionados en el
+ * detalle del boletín y devuelve el rango [mínimo, máximo]. Si solo hay una
+ * mención, el rango es puntual (permite rangos mixtos como "AC 26 Sur a AK 72").
+ */
+const extractRange = (detail: string, kind: 'calle' | 'carrera') => {
+  const labels = kind === 'calle' ? VIA_CALLE : VIA_CARRERA
+  const matches = [...normalize(detail).matchAll(new RegExp(`${labels}\\s*${VIA_NUMBER_RANGE}`, 'gi'))]
+  const numbers = matches.map((match) => Number.parseInt(match[2], 10))
+  if (numbers.length === 0) return undefined
+  return [Math.min(...numbers), Math.max(...numbers)]
+}
+
+export const addressWithinRange = (address: string, detail = '') => {
+  const numbers = addressNumbers(address)
+  const streetRange = extractRange(detail, 'calle')
+  const carreraRange = extractRange(detail, 'carrera')
+  if (!numbers || !streetRange || !carreraRange) return false
+  return numbers.street >= streetRange[0] && numbers.street <= streetRange[1]
+    && numbers.carrera >= carreraRange[0] && numbers.carrera <= carreraRange[1]
+}
+
 export const bulletinMentionsLocalidad = (bulletin: string, localidad: string) => {
   if (!bulletin.trim() || !localidad.trim()) return false
   return normalize(bulletin).includes(normalize(localidad))
@@ -25,31 +78,6 @@ export const isDateInWeek = (date: string, weekStart: string) => {
   return target >= start && target <= end
 }
 
-const addressNumbers = (address: string) => {
-  const match = normalize(address).match(/(avenida\s+calle|av\.?\s*calle|ac\.?|calle|cl\.?|carrera|cra\.?|transversal|transv\.?|tv\.?|diagonal|dg\.?)\s*(\d+[a-z]?)[^#\d]*(?:#\s*)?(\d+[a-z]?)/)
-  if (!match) return undefined
-  const first = Number.parseInt(match[2], 10)
-  const second = Number.parseInt(match[3], 10)
-  return ['carrera', 'cra', 'cra.', 'transversal', 'transv', 'transv.', 'tv', 'tv.', 'diagonal', 'dg', 'dg.'].includes(match[1])
-    ? { street: second, carrera: first }
-    : { street: first, carrera: second }
-}
-
-const rangeNumbers = (detail: string, kind: 'calle' | 'carrera') => {
-  const labels = kind === 'carrera' ? '(?:carrera|cra|transversal|transv|tv\\.?)' : '(?:avenida\\s+)?(?:calle|cl)'
-  const match = normalize(detail).match(new RegExp(`${labels}\\s*(\\d+[a-z]?)[^a-z\\d]+(?:a|hasta)\\s*(?:la\\s+)?${labels}\\s*(\\d+[a-z]?)`))
-  return match ? [Number.parseInt(match[1], 10), Number.parseInt(match[2], 10)] : undefined
-}
-
-export const addressWithinRange = (address: string, detail = '') => {
-  const numbers = addressNumbers(address)
-  const streetRange = rangeNumbers(detail, 'calle')
-  const carreraRange = rangeNumbers(detail, 'carrera')
-  if (!numbers || !streetRange || !carreraRange) return false
-  return numbers.street >= Math.min(...streetRange) && numbers.street <= Math.max(...streetRange)
-    && numbers.carrera >= Math.min(...carreraRange) && numbers.carrera <= Math.max(...carreraRange)
-}
-
 export const hasOutageThisWeek = (
   bulletin: string,
   localidad: string,
@@ -61,10 +89,14 @@ export const hasOutageThisWeek = (
   return notices.some((notice) => noticeAppliesToAddress(notice, localidad, weekStart, address))
 }
 
-export const noticeAppliesToAddress = (notice: OutageNotice, localidad: string, weekStart: string, address = '') =>
+/** Valida localidad y dirección sin restricción de fecha (útil para semanas futuras). */
+export const noticeMatchesAddress = (notice: OutageNotice, localidad: string, address = '') =>
   normalize(notice.localidad).includes(normalize(localidad))
-    && isDateInWeek(notice.date, weekStart)
     && (!address || addressWithinRange(address, notice.addressRange ?? notice.detail))
+
+export const noticeAppliesToAddress = (notice: OutageNotice, localidad: string, weekStart: string, address = '') =>
+  noticeMatchesAddress(notice, localidad, address)
+    && isDateInWeek(notice.date, weekStart)
 
 export const addressIsReady = (address: string) => address.trim().length >= 8
 
