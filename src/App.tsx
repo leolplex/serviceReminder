@@ -64,9 +64,11 @@ function App() {
   }, [activationInProgress, address, email, localidad, profileLoaded])
 
   const addressIncomplete = !localidad || !addressIsReady(address)
-  const visibleNotices = addressIncomplete ? [] : notices
   const visibleSyncStatus = addressIncomplete ? (localidad ? 'Dirección incompleta' : 'Sin consultar') : syncStatus
-  const localNotices = useMemo(() => visibleNotices.filter((notice) => upcomingWeekStarts.some((start) => noticeAppliesToAddress(notice, localidad, start, address))), [address, localidad, upcomingWeekStarts, visibleNotices])
+  const localNotices = useMemo(() => {
+    if (addressIncomplete) return []
+    return notices.filter((notice) => upcomingWeekStarts.some((start) => noticeAppliesToAddress(notice, localidad, start, address)))
+  }, [address, addressIncomplete, localidad, notices, upcomingWeekStarts])
   const hasOutage = localNotices.length > 0
   const isSubscribed = Boolean(email.trim()) && emailIsValid(email)
 
