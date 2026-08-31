@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { addressIsReady, addressWithinRange, bulletinMentionsLocalidad, hasOutageThisWeek, isDateInWeek, nextSundayAtSixPm, noticeAppliesToAddress, type OutageNotice } from './outageLogic'
+import { addressIsReady, addressWithinRange, bulletinMentionsLocalidad, hasOutageThisWeek, isDateInWeek, noticeAppliesToAddress, type OutageNotice } from './outageLogic'
 
 const notices: OutageNotice[] = [{ localidad: 'Kennedy', date: '2026-08-25' }]
 
@@ -78,61 +78,9 @@ describe('outage logic', () => {
     expect(noticeAppliesToAddress(notice, 'Engativá', currentWeek, 'Carrera 71#49A-31')).toBe(false)
   })
 
-  it('uses Bogotá time when scheduling the next Sunday alert', () => {
-    const nextSunday = nextSundayAtSixPm(new Date('2026-08-24T17:00:00-05:00'))
-    const bogota = new Intl.DateTimeFormat('es-CO', {
-      timeZone: 'America/Bogota',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    }).formatToParts(nextSunday)
-    const values = Object.fromEntries(bogota.filter((part) => part.type !== 'literal').map((part) => [part.type, part.value]))
-
-    expect(Number(values.day)).toBeGreaterThanOrEqual(30)
-    expect(Number(values.hour)).toBe(18)
-    expect(Number(values.minute)).toBe(0)
-  })
-
   it('does not alert an address outside the published range', () => {
     const addressNotice: OutageNotice[] = [{ localidad: 'Kennedy', date: '2026-08-25', detail: 'De la Calle 42 a la Calle 61B, entre la Carrera 3 a la Carrera 9' }]
     expect(hasOutageThisWeek('Kennedy: martes 25', 'Kennedy', addressNotice, '2026-08-24', 'Calle 50 # 5-20')).toBe(true)
     expect(hasOutageThisWeek('Kennedy: martes 25', 'Kennedy', addressNotice, '2026-08-24', 'Calle 70 # 5-20')).toBe(false)
-  })
-
-  it('schedules the next Sunday at 6:00 p.m. in Bogotá time', () => {
-    const nextSunday = nextSundayAtSixPm(new Date('2026-08-24T17:00:00-05:00'))
-    const nextSundayParts = new Intl.DateTimeFormat('en-CA', {
-      timeZone: 'America/Bogota',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-    }).formatToParts(nextSunday)
-    const nextSundayValues = Object.fromEntries(nextSundayParts.filter((part) => part.type !== 'literal').map((part) => [part.type, part.value]))
-    expect(Number(nextSundayValues.day)).toBeGreaterThanOrEqual(30)
-    expect(Number(nextSundayValues.hour)).toBe(18)
-    expect(Number(nextSundayValues.minute)).toBe(0)
-
-    const followingSunday = nextSundayAtSixPm(new Date('2026-08-30T19:00:00-05:00'))
-    const followingSundayParts = new Intl.DateTimeFormat('en-CA', {
-      timeZone: 'America/Bogota',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-    }).formatToParts(followingSunday)
-    const followingSundayValues = Object.fromEntries(followingSundayParts.filter((part) => part.type !== 'literal').map((part) => [part.type, part.value]))
-    expect(Number(followingSundayValues.day)).toBeGreaterThanOrEqual(6)
-    expect(Number(followingSundayValues.hour)).toBe(18)
-    expect(Number(followingSundayValues.minute)).toBe(0)
   })
 })

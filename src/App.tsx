@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ACUEDUCTO_SOURCE_URL } from './acueductoScraper'
-import { withEmailLock } from './browserAdapters'
 import { emailIsValid } from './emailService'
 import { emailNotifier, outageSource, profileStore, scheduler, userNotifier } from './norityServices'
-import { addressIsReady, noticeAppliesToAddress, noticeMatchesAddress, nextSundayAtSixPm, type OutageNotice } from './outageLogic'
+import { addressIsReady, noticeAppliesToAddress, type OutageNotice } from './outageLogic'
 
 const LOCALIDADES = [
   'Usaquén', 'Chapinero', 'Santa Fe', 'San Cristóbal', 'Usme',
@@ -72,33 +71,12 @@ function App() {
   const hasOutage = localNotices.length > 0
   const isSubscribed = Boolean(email.trim()) && emailIsValid(email)
 
-  const syncWithAcueducto = useCallback(async (sendEmail = false) => {
+  const syncWithAcueducto = useCallback(async () => {
     setSyncStatus('Consultando Acueducto...')
     try {
       const fetchedNotices = await outageSource.fetch(LOCALIDADES)
       setNotices(fetchedNotices)
       setSyncStatus(`${fetchedNotices.length} avisos encontrados`)
-      if (sendEmail && email && emailNotifier.configured) {
-        // Considera cualquier semana publicada a partir de hoy (incluida la próxima
-        // semana si la fuente ya se actualizó) y envía un correo por cada semana
-        // con avisos que apliquen a la dirección.
-        const start = new Date(`${weekStart}T12:00:00`)
-        const applicable = fetchedNotices.filter((notice) => {
-          const noticeDate = new Date(`${notice.date}T12:00:00`)
-          return noticeDate >= start && noticeMatchesAddress(notice, localidad, address)
-        })
-        const weeks = [...new Set(applicable.map((notice) => weekStartOf(notice.date)))]
-        for (const week of weeks) {
-          const matchingNotices = fetchedNotices.filter((notice) => noticeAppliesToAddress(notice, localidad, week, address))
-          if (matchingNotices.length === 0) continue
-          await withEmailLock(week, async () => {
-            if (await profileStore.hasSentEmail(week)) return
-            await emailNotifier.send(email, address, matchingNotices)
-            await profileStore.markEmailSent(week)
-            setSyncStatus(`Aviso enviado a ${email}`)
-          })
-        }
-      }
       const matchingNotices = fetchedNotices.filter((notice) => noticeAppliesToAddress(notice, localidad, weekStart, address))
       if (notificationsEnabled && matchingNotices.length > 0 && !await profileStore.hasSentNotification(weekStart)) {
         userNotifier.notify('Corte de agua en tu localidad', `Hay un corte para ${address}, en ${localidad}.`)
@@ -108,7 +86,7 @@ function App() {
       setSyncStatus('No se pudo consultar (revisa CORS o conexión)')
       notifyUser('error', 'No se pudo consultar el boletín de Acueducto.')
     }
-  }, [address, email, localidad, notificationsEnabled, weekStart])
+  }, [address, localidad, notificationsEnabled, weekStart])
 
   useEffect(() => {
     if (addressIncomplete) return
@@ -118,13 +96,6 @@ function App() {
       void syncWithAcueducto()
     }, 650)
   }, [addressIncomplete, address, localidad, syncWithAcueducto])
-
-  useEffect(() => {
-    const runAt = nextSundayAtSixPm()
-    return scheduler.schedule(() => {
-      void syncWithAcueducto(true)
-    }, runAt.getTime() - Date.now())
-  }, [syncWithAcueducto])
 
   const requestNotifications = async () => {
     if (await userNotifier.requestPermission()) {
@@ -240,7 +211,7 @@ function App() {
         {localNotices.length > 0 ? <div className="notice-list">{localNotices.map((notice) => <article className="notice-card" key={`${notice.date}-${notice.localidad}-${notice.addressRange}`}><p className="notice-date">{new Date(`${notice.date}T12:00:00`).toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })}</p><h3>{notice.localidad}</h3><p><strong>Barrios:</strong> {notice.barrios || 'Sector indicado por Acueducto'}</p><p><strong>Horario:</strong> {notice.hours || 'Consultar en la fuente oficial'}</p><p><strong>Rango:</strong> {notice.addressRange || 'Consultar en la fuente oficial'}</p></article>)}</div> : <div className="empty-notices">Consulta Acueducto para ver los barrios afectados por tu dirección.</div>}
         <div className="button-row"><button className="secondary-button" type="button" onClick={() => void syncWithAcueducto()}>↻ Consultar Acueducto</button></div>
         <p className="sync-status" aria-live="polite">{visibleSyncStatus} · <a href={ACUEDUCTO_SOURCE_URL} target="_blank" rel="noreferrer">Ver fuente oficial</a></p>
-        <p className="schedule-note">↻ Domingos 6:00 p. m.: consulta y email automático si tu dirección está en un rango. {!emailNotifier.configured && 'Falta configurar EmailJS.'}</p>
+        <p className="schedule-note">✉ El email semanal se envía automáticamente los viernes 7:00 p. m. (hora Bogotá) si tu dirección está en un rango. Aquí la consulta es manual.</p>
       </section>
 
       <footer><span>Nority funciona sin cuentas ni servidor.</span><span className="footer-dot" /> <span>Datos guardados localmente</span></footer>

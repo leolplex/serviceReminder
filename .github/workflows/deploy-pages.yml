@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '0 */6 * * *'
+    # Snapshot refresh + deploy cada 6 horas
+    - cron: '0 0 * * 6'
   workflow_dispatch:
 
 permissions:

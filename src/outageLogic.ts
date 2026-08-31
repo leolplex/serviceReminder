@@ -99,37 +99,3 @@ export const noticeAppliesToAddress = (notice: OutageNotice, localidad: string, 
     && isDateInWeek(notice.date, weekStart)
 
 export const addressIsReady = (address: string) => address.trim().length >= 8
-
-export const nextSundayAtSixPm = (now = new Date()) => {
-  const formatter = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'America/Bogota',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    weekday: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-  })
-
-  const parts = formatter.formatToParts(now)
-  const values = Object.fromEntries(parts
-    .filter((part) => part.type !== 'literal')
-    .map((part) => [part.type, part.value]))
-
-  const year = Number(values.year)
-  const month = Number(values.month)
-  const day = Number(values.day)
-  const hour = Number(values.hour)
-  const minute = Number(values.minute)
-    
-  const bogotaDate = new Date(Date.UTC(year, month - 1, day, hour, minute, Number(values.second ?? 0)))
-  const bogotaWeekday = bogotaDate.getUTCDay()
-  const daysUntilSunday = (7 - bogotaWeekday) % 7
-
-  const nextSundayDate = new Date(Date.UTC(year, month - 1, day + daysUntilSunday, 23, 0, 0))
-  if (bogotaWeekday === 0 && hour >= 18) return new Date(Date.UTC(year, month - 1, day + 7, 23, 0, 0))
-  if (bogotaWeekday === 0 && hour < 18) return nextSundayDate
-  return nextSundayDate
-}
