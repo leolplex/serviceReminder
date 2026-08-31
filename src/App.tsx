@@ -85,7 +85,12 @@ function App() {
   }, [address, email, localidad, notificationsEnabled, weekStart])
 
   useEffect(() => {
-    if (!localidad || !addressIsReady(address)) return
+    if (!localidad || !addressIsReady(address)) {
+      setNotices([])
+      setSyncStatus(localidad ? 'Dirección incompleta' : 'Sin consultar')
+      return
+    }
+
     return scheduler.schedule(() => {
       setSyncStatus('Verificando nueva dirección...')
       void syncWithAcueducto()
@@ -199,7 +204,7 @@ function App() {
         <input className="address-input" id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="tu-correo@ejemplo.com" />
         <label htmlFor="localidad">Localidad de Bogotá</label>
         <div className="select-wrap"><select id="localidad" value={localidad} onChange={(event) => setLocalidad(event.target.value)}><option value="">Elige una localidad...</option>{LOCALIDADES.map((item) => <option key={item} value={item}>{item}</option>)}</select><span>⌄</span></div>
-        <button className="primary-button" type="button" disabled={activationInProgress || !localidad || !addressIsReady(address) || (!isSubscribed && !emailIsValid(email))} onClick={handleSubscription}>{activationInProgress ? (isSubscribed ? 'Cancelando suscripción...' : 'Activando suscripción...') : saved ? (isSubscribed ? '✓ Suscripción activa' : '✓ Suscripción cancelada') : (isSubscribed ? 'Desuscribirse' : 'Activar suscripción')}</button>
+        <button className="primary-button" type="button" disabled={activationInProgress || !localidad || !addressIsReady(address) || (!isSubscribed && !emailIsValid(email))} onClick={handleSubscription}>{activationInProgress ? (isSubscribed ? 'Cancelando suscripción...' : 'Activando suscripción...') : saved ? (isSubscribed ? '✓ Suscripción activa' : '✓ Suscripción cancelada') : (isSubscribed ? 'Darse de baja' : 'Activar suscripción')}</button>
       </section>
 
       <section className={`status-panel ${hasOutage ? 'alert' : ''}`}>
