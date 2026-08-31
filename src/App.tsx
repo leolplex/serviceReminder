@@ -220,12 +220,12 @@ function App() {
 
       <section className="panel locality-panel">
         <div className="step-heading"><span className="step-number">01</span><div><h2>Tu dirección</h2><p>Solo se guarda en este dispositivo</p></div></div>
+        <label htmlFor="localidad">Localidad de Bogotá</label>
+        <div className="select-wrap"><select id="localidad" value={localidad} onChange={(event) => setLocalidad(event.target.value)}><option value="">Elige una localidad...</option>{LOCALIDADES.map((item) => <option key={item} value={item}>{item}</option>)}</select><span>⌄</span></div>
         <label htmlFor="address">Dirección en Bogotá</label>
         <input className="address-input" id="address" value={address} onChange={(event) => setAddress(event.target.value)} placeholder="Ej. Calle 42 # 78-10" />
         <label htmlFor="email">Email para avisos</label>
         <input className="address-input" id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="tu-correo@ejemplo.com" />
-        <label htmlFor="localidad">Localidad de Bogotá</label>
-        <div className="select-wrap"><select id="localidad" value={localidad} onChange={(event) => setLocalidad(event.target.value)}><option value="">Elige una localidad...</option>{LOCALIDADES.map((item) => <option key={item} value={item}>{item}</option>)}</select><span>⌄</span></div>
         <button className="primary-button" type="button" disabled={activationInProgress || !localidad || !addressIsReady(address) || (!isSubscribed && !emailIsValid(email))} onClick={handleSubscription}>{activationInProgress ? (isSubscribed ? 'Cancelando suscripción...' : 'Activando suscripción...') : saved ? (isSubscribed ? '✓ Suscripción activa' : '✓ Suscripción cancelada') : (isSubscribed ? 'Darse de baja' : 'Activar suscripción')}</button>
       </section>
 
