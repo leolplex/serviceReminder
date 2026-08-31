@@ -68,11 +68,63 @@ export const noticeAppliesToAddress = (notice: OutageNotice, localidad: string, 
 
 export const addressIsReady = (address: string) => address.trim().length >= 8
 
+const getTimeZoneOffsetMinutes = (date: Date, timeZone: string) => {
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  })
+
+  const parts = formatter.formatToParts(date)
+  const values = Object.fromEntries(parts
+    .filter((part) => part.type !== 'literal')
+    .map((part) => [part.type, Number(part.value)]))
+
+  const asUtc = Date.UTC(
+    values.year,
+    values.month - 1,
+    values.day,
+    values.hour,
+    values.minute,
+    values.second,
+  )
+
+  return (asUtc - date.getTime()) / 60000
+}
+
 export const nextSundayAtSixPm = (now = new Date()) => {
-  const next = new Date(now)
-  const daysUntilSunday = (7 - next.getDay()) % 7
-  next.setDate(next.getDate() + daysUntilSunday)
-  next.setHours(18, 0, 0, 0)
-  if (next <= now) next.setDate(next.getDate() + 7)
+  const timeZone = 'America/Bogota'
+  const offsetMinutes = getTimeZoneOffsetMinutes(now, timeZone)
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    weekday: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  })
+
+  const parts = formatter.formatToParts(now)
+  const values = Object.fromEntries(parts
+    .filter((part) => part.type !== 'literal')
+    .map((part) => [part.type, part.value]))
+
+  const day = Number(values.day)
+  const month = Number(values.month)
+  const year = Number(values.year)
+  const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay()
+  const daysUntilSunday = (7 - weekday) % 7
+
+  const targetUtc = Date.UTC(year, month - 1, day + daysUntilSunday, 18, 0, 0) - offsetMinutes * 60_000
+  const next = new Date(targetUtc)
+  if (next <= now) next.setUTCDate(next.getUTCDate() + 7)
   return next
 }

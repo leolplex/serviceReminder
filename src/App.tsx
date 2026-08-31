@@ -56,6 +56,7 @@ function App() {
 
   const localNotices = useMemo(() => notices.filter((notice) => noticeAppliesToAddress(notice, localidad, weekStart, address)), [address, localidad, notices, weekStart])
   const hasOutage = localNotices.length > 0
+  const isSubscribed = Boolean(email.trim()) && emailIsValid(email)
 
   const syncWithAcueducto = useCallback(async (sendEmail = false) => {
     setSyncStatus('Consultando Acueducto...')
@@ -139,6 +140,40 @@ function App() {
     }
   }
 
+  const unsubscribe = async () => {
+    if (!localidad || !addressIsReady(address)) {
+      const message = 'Completa una dirección y localidad antes de cancelar la suscripción.'
+      setSyncStatus(message)
+      notifyUser('error', message)
+      return
+    }
+
+    const normalizedAddress = address.trim()
+    setActivationInProgress(true)
+    try {
+      await profileStore.save({ address: normalizedAddress, localidad, email: '' })
+      setEmail('')
+      setSyncStatus('Suscripción cancelada')
+      notifyUser('success', 'Suscripción cancelada.')
+      setSaved(true)
+      window.setTimeout(() => setSaved(false), 2200)
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : 'No se pudo cancelar la suscripción'
+      setSyncStatus(`No se pudo cancelar la suscripción: ${detail}`)
+      notifyUser('error', `No se pudo cancelar la suscripción: ${detail}`)
+    } finally {
+      setActivationInProgress(false)
+    }
+  }
+
+  const handleSubscription = async () => {
+    if (isSubscribed) {
+      await unsubscribe()
+      return
+    }
+    await saveLocalidad()
+  }
+
   return (
     <main className="app-shell">
       <header className="topbar">
@@ -164,7 +199,7 @@ function App() {
         <input className="address-input" id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="tu-correo@ejemplo.com" />
         <label htmlFor="localidad">Localidad de Bogotá</label>
         <div className="select-wrap"><select id="localidad" value={localidad} onChange={(event) => setLocalidad(event.target.value)}><option value="">Elige una localidad...</option>{LOCALIDADES.map((item) => <option key={item} value={item}>{item}</option>)}</select><span>⌄</span></div>
-        <button className="primary-button" type="button" disabled={activationInProgress || !localidad || !addressIsReady(address) || !emailIsValid(email)} onClick={saveLocalidad}>{activationInProgress ? 'Activando suscripción...' : saved ? '✓ Suscripción activada' : 'Activar suscripción'}</button>
+        <button className="primary-button" type="button" disabled={activationInProgress || !localidad || !addressIsReady(address) || (!isSubscribed && !emailIsValid(email))} onClick={handleSubscription}>{activationInProgress ? (isSubscribed ? 'Cancelando suscripción...' : 'Activando suscripción...') : saved ? (isSubscribed ? '✓ Suscripción activa' : '✓ Suscripción cancelada') : (isSubscribed ? 'Desuscribirse' : 'Activar suscripción')}</button>
       </section>
 
       <section className={`status-panel ${hasOutage ? 'alert' : ''}`}>
@@ -176,7 +211,7 @@ function App() {
         <div className="step-heading"><span className="step-number">02</span><div><h2>Boletín de esta semana</h2><p>Actualizado para hoy, {currentDateLabel()}</p></div></div>
         <p className="helper">Nority consulta la fuente oficial y muestra solo los barrios afectados.</p>
         {localNotices.length > 0 ? <div className="notice-list">{localNotices.map((notice) => <article className="notice-card" key={`${notice.date}-${notice.localidad}-${notice.addressRange}`}><p className="notice-date">{new Date(`${notice.date}T12:00:00`).toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })}</p><h3>{notice.localidad}</h3><p><strong>Barrios:</strong> {notice.barrios || 'Sector indicado por Acueducto'}</p><p><strong>Horario:</strong> {notice.hours || 'Consultar en la fuente oficial'}</p><p><strong>Rango:</strong> {notice.addressRange || 'Consultar en la fuente oficial'}</p></article>)}</div> : <div className="empty-notices">Consulta Acueducto para ver los barrios afectados por tu dirección.</div>}
-        <div className="button-row"><button className="secondary-button" type="button" onClick={() => void syncWithAcueducto()}>↻ Consultar Acueducto</button><button className="notify-button" type="button" disabled={!addressIsReady(address) || !localidad} onClick={requestNotifications}>{notificationsEnabled ? '✓ Aviso programado' : '◉ Programar aviso'}</button></div>
+        <div className="button-row"><button className="secondary-button" type="button" onClick={() => void syncWithAcueducto()}>↻ Consultar Acueducto</button></div>
         <p className="sync-status" aria-live="polite">{syncStatus} · <a href={ACUEDUCTO_SOURCE_URL} target="_blank" rel="noreferrer">Ver fuente oficial</a></p>
         <p className="schedule-note">↻ Domingos 6:00 p. m.: consulta y email automático si tu dirección está en un rango. {!emailNotifier.configured && 'Falta configurar EmailJS.'}</p>
       </section>

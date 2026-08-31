@@ -53,6 +53,30 @@ describe('outage logic', () => {
     expect(addressWithinRange('Cra. 96i #51-99', range)).toBe(true)
   })
 
+  it('supports a Carrera address with the local Colombian format #49A-31', () => {
+    const range = 'De la Calle 42 a la Calle 61B, entre la Carrera 68 a la Carrera 80'
+    expect(addressWithinRange('Carrera 71#49A-31', range)).toBe(true)
+    expect(addressWithinRange('Carrera 71#99A-31', range)).toBe(false)
+  })
+
+  it('uses Bogotá time when scheduling the next Sunday alert', () => {
+    const nextSunday = nextSundayAtSixPm(new Date('2026-08-24T17:00:00-05:00'))
+    const bogota = new Intl.DateTimeFormat('es-CO', {
+      timeZone: 'America/Bogota',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    }).formatToParts(nextSunday)
+    const values = Object.fromEntries(bogota.filter((part) => part.type !== 'literal').map((part) => [part.type, part.value]))
+
+    expect(Number(values.day)).toBeGreaterThanOrEqual(30)
+    expect(Number(values.hour)).toBe(18)
+    expect(Number(values.minute)).toBe(0)
+  })
+
   it('does not alert an address outside the published range', () => {
     const addressNotice: OutageNotice[] = [{ localidad: 'Kennedy', date: '2026-08-25', detail: 'De la Calle 42 a la Calle 61B, entre la Carrera 3 a la Carrera 9' }]
     expect(hasOutageThisWeek('Kennedy: martes 25', 'Kennedy', addressNotice, '2026-08-24', 'Calle 50 # 5-20')).toBe(true)
