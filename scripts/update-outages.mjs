@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
 const sourceUrl = 'https://www.acueducto.com.co/wps/portal/EAB2/Home/atencion-al-usuario/programacion_cortes/cortes+de+la+semana'
 const outputPath = 'public/outages.json'
@@ -28,6 +28,21 @@ for (const [, rawRow] of rows) {
   const date = rowDate ?? currentDate
   if (localidad && date) notices.push({ localidad, date, barrios: cells[1], addressRange: cells[2], hours: cells[3], detail: cells[2] ?? text })
 }
+
+const payload = { updatedAt: new Date().toISOString(), notices }
+let existing = null
+try {
+  const previous = await readFile(outputPath, 'utf8')
+  existing = JSON.parse(previous)
+} catch {
+  existing = null
+}
+
+if (existing && JSON.stringify(existing.notices ?? []) === JSON.stringify(notices)) {
+  console.log(`No outage data changes detected. Keeping ${outputPath} unchanged.`)
+  process.exit(0)
+}
+
 await mkdir('public', { recursive: true })
-await writeFile(outputPath, `${JSON.stringify({ updatedAt: new Date().toISOString(), notices }, null, 2)}\n`)
+await writeFile(outputPath, `${JSON.stringify(payload, null, 2)}\n`)
 console.log(`Saved ${notices.length} outage notices to ${outputPath}`)

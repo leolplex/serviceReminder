@@ -4,11 +4,11 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '0 23 * * 0'
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -32,7 +32,18 @@ jobs:
       - name: Test
         run: npm test
       - name: Update official outage snapshot
-        run: node scripts/update-outages.mjs
+        if: github.event_name != 'push' || github.actor != 'github-actions[bot]'
+        run: |
+          node scripts/update-outages.mjs
+          if git diff --quiet -- public/outages.json; then
+            echo "No outage updates detected."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add public/outages.json
+            git commit -m "chore: refresh outage snapshot"
+            git push origin HEAD:main
+          fi
       - name: Send weekly email when address is affected
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: node scripts/send-weekly-email.mjs
