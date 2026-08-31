@@ -20,6 +20,12 @@ const currentMonday = () => {
   return date.toISOString().slice(0, 10)
 }
 
+const nextWeekStart = (weekStart: string) => {
+  const date = new Date(`${weekStart}T12:00:00`)
+  date.setDate(date.getDate() + 7)
+  return date.toISOString().slice(0, 10)
+}
+
 const currentDateLabel = () => new Date().toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' })
 type Feedback = { type: 'success' | 'error'; message: string }
 
@@ -30,6 +36,7 @@ function App() {
   const [profileLoaded, setProfileLoaded] = useState(false)
   const [notificationsEnabled, setNotificationsEnabled] = useState(() => localStorage.getItem('service-reminder-notifications') === 'true')
   const weekStart = currentMonday()
+  const upcomingWeekStarts = useMemo(() => [weekStart, nextWeekStart(weekStart)], [weekStart])
   const [notices, setNotices] = useState<OutageNotice[]>([])
   const [syncStatus, setSyncStatus] = useState('Sin consultar')
   const [saved, setSaved] = useState(false)
@@ -54,7 +61,7 @@ function App() {
     if (profileLoaded && !activationInProgress) void profileStore.save({ localidad, address, email })
   }, [activationInProgress, address, email, localidad, profileLoaded])
 
-  const localNotices = useMemo(() => notices.filter((notice) => noticeAppliesToAddress(notice, localidad, weekStart, address)), [address, localidad, notices, weekStart])
+  const localNotices = useMemo(() => notices.filter((notice) => upcomingWeekStarts.some((start) => noticeAppliesToAddress(notice, localidad, start, address))), [address, localidad, notices, upcomingWeekStarts])
   const hasOutage = localNotices.length > 0
   const isSubscribed = Boolean(email.trim()) && emailIsValid(email)
 

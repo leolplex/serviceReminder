@@ -59,13 +59,23 @@ describe('outage logic', () => {
     expect(addressWithinRange('Carrera 71#99A-31', range)).toBe(false)
   })
 
-  it('applies a published notice to a Chapinero address in the 71#49A-31 format', () => {
+  it('applies the real Engativá notice for Friday 4 September to a 71#49A-31 address', () => {
     const notice: OutageNotice = {
-      localidad: 'Chapinero',
-      date: '2026-08-25',
-      addressRange: 'De la Calle 42 a la Calle 61B, entre la Carrera 68 a la Carrera 80',
+      localidad: 'Engativá',
+      date: '2026-09-04',
+      addressRange: 'De la Calle 26 a la Calle 63, entre la Carrera 68 a la Carrera 72',
     }
-    expect(noticeAppliesToAddress(notice, 'Chapinero', '2026-08-24', 'Carrera 71#49A-31')).toBe(true)
+    expect(noticeAppliesToAddress(notice, 'Engativá', '2026-08-31', 'Carrera 71#49A-31')).toBe(true)
+  })
+
+  it('shows a matching next-week notice in the UI when the current date is near the week boundary', () => {
+    const notice: OutageNotice = {
+      localidad: 'Engativá',
+      date: '2026-09-04',
+      addressRange: 'De la Calle 26 a la Calle 63, entre la Carrera 68 a la Carrera 72',
+    }
+    const currentWeek = '2026-08-25'
+    expect(noticeAppliesToAddress(notice, 'Engativá', currentWeek, 'Carrera 71#49A-31')).toBe(false)
   })
 
   it('uses Bogotá time when scheduling the next Sunday alert', () => {
