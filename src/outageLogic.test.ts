@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { addressIsReady, addressWithinRange, bulletinMentionsLocalidad, hasOutageThisWeek, isDateInWeek, nextSundayAtSixPm, type OutageNotice } from './outageLogic'
+import { addressIsReady, addressWithinRange, bulletinMentionsLocalidad, hasOutageThisWeek, isDateInWeek, nextSundayAtSixPm, noticeAppliesToAddress, type OutageNotice } from './outageLogic'
 
 const notices: OutageNotice[] = [{ localidad: 'Kennedy', date: '2026-08-25' }]
 
@@ -57,6 +57,15 @@ describe('outage logic', () => {
     const range = 'De la Calle 42 a la Calle 61B, entre la Carrera 68 a la Carrera 80'
     expect(addressWithinRange('Carrera 71#49A-31', range)).toBe(true)
     expect(addressWithinRange('Carrera 71#99A-31', range)).toBe(false)
+  })
+
+  it('applies a published notice to a Chapinero address in the 71#49A-31 format', () => {
+    const notice: OutageNotice = {
+      localidad: 'Chapinero',
+      date: '2026-08-25',
+      addressRange: 'De la Calle 42 a la Calle 61B, entre la Carrera 68 a la Carrera 80',
+    }
+    expect(noticeAppliesToAddress(notice, 'Chapinero', '2026-08-24', 'Carrera 71#49A-31')).toBe(true)
   })
 
   it('uses Bogotá time when scheduling the next Sunday alert', () => {
