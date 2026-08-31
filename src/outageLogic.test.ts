@@ -83,13 +83,37 @@ describe('outage logic', () => {
     expect(hasOutageThisWeek('Kennedy: martes 25', 'Kennedy', addressNotice, '2026-08-24', 'Calle 70 # 5-20')).toBe(false)
   })
 
-  it('schedules the next Sunday at 6:00 p.m.', () => {
-    const nextSunday = nextSundayAtSixPm(new Date('2026-08-24T17:00:00'))
-    expect(nextSunday.getDay()).toBe(0)
-    expect(nextSunday.getHours()).toBe(18)
+  it('schedules the next Sunday at 6:00 p.m. in Bogotá time', () => {
+    const nextSunday = nextSundayAtSixPm(new Date('2026-08-24T17:00:00-05:00'))
+    const nextSundayParts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/Bogota',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    }).formatToParts(nextSunday)
+    const nextSundayValues = Object.fromEntries(nextSundayParts.filter((part) => part.type !== 'literal').map((part) => [part.type, part.value]))
+    expect(Number(nextSundayValues.day)).toBeGreaterThanOrEqual(30)
+    expect(Number(nextSundayValues.hour)).toBe(18)
+    expect(Number(nextSundayValues.minute)).toBe(0)
 
-    const followingSunday = nextSundayAtSixPm(new Date('2026-08-30T19:00:00'))
-    expect(followingSunday.getDay()).toBe(0)
-    expect(followingSunday.getHours()).toBe(18)
+    const followingSunday = nextSundayAtSixPm(new Date('2026-08-30T19:00:00-05:00'))
+    const followingSundayParts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/Bogota',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    }).formatToParts(followingSunday)
+    const followingSundayValues = Object.fromEntries(followingSundayParts.filter((part) => part.type !== 'literal').map((part) => [part.type, part.value]))
+    expect(Number(followingSundayValues.day)).toBeGreaterThanOrEqual(6)
+    expect(Number(followingSundayValues.hour)).toBe(18)
+    expect(Number(followingSundayValues.minute)).toBe(0)
   })
 })
