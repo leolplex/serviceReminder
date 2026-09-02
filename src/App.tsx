@@ -177,7 +177,6 @@ function App() {
       <header className="topbar">
         <div className="brand-mark" role="img" aria-label="Logo de perro negro">🐕‍⬛</div>
         <div><span className="eyebrow">Bogotá · agua al día</span><strong>Nority</strong></div>
-        <span className="offline-pill"><span /> Sin hosting</span>
       </header>
 
       <section className="intro">
@@ -213,8 +212,6 @@ function App() {
         <p className="sync-status" aria-live="polite">{visibleSyncStatus} · <a href={ACUEDUCTO_SOURCE_URL} target="_blank" rel="noreferrer">Ver fuente oficial</a></p>
         <p className="schedule-note">✉ El email semanal se envía automáticamente los viernes 7:00 p. m. (hora Bogotá) si tu dirección está en un rango. Aquí la consulta es manual.</p>
       </section>
-
-      <footer><span>Nority funciona sin cuentas ni servidor.</span><span className="footer-dot" /> <span>Datos guardados localmente</span></footer>
     </main>
   )
 }
