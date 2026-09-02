@@ -30,14 +30,8 @@ create table public.email_sends (
   unique (email, week_start)
 );
 
+-- RLS activa y SIN políticas: esta tabla contiene correos de los suscriptores.
+-- Solo la accede el script de CI (scripts/send-weekly-email.mjs) con la
+-- service role key, que bypasea RLS. No se expone a la API pública porque
+-- la anon key viaja incrustada en el bundle de la PWA (riesgo de fuga PII).
 alter table public.email_sends enable row level security;
-
--- El script de CI usa la service role key (bypass RLS); esta política
--- permite consultar/insertar desde la app si alguna vez se necesita.
-create policy "Anyone can read email sends"
-on public.email_sends for select
-using (true);
-
-create policy "Anyone can insert email sends"
-on public.email_sends for insert
-with check (true);
