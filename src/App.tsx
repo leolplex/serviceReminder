@@ -210,15 +210,16 @@ function App() {
       <section className="panel locality-panel">
         <div className="step-heading"><span className="step-number">01</span><div><h2>Tu dirección</h2><p>Solo se guarda en este dispositivo</p></div></div>
         <label htmlFor="localidad">Localidad de Bogotá</label>
-        <div className="select-wrap"><select id="localidad" value={localidad} onChange={(event) => setLocalidad(event.target.value)}><option value="">Elige una localidad...</option>{LOCALIDADES.map((item) => <option key={item} value={item}>{item}</option>)}</select><span>⌄</span></div>
+        <div className="select-wrap"><select id="localidad" value={localidad} onChange={(event) => setLocalidad(event.target.value)}><option value="">Elige una localidad...</option>{LOCALIDADES.map((item) => <option key={item} value={item}>{item}</option>)}</select><span aria-hidden="true">⌄</span></div>
         <label htmlFor="address">Dirección en Bogotá</label>
         <input className="address-input" id="address" value={address} onChange={(event) => setAddress(event.target.value)} placeholder="Ej. Calle 42 # 78-10" />
         <label htmlFor="email">Email para avisos</label>
-        <input className="address-input" id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="tu-correo@ejemplo.com" />
+        <input className="address-input" id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="tu-correo@ejemplo.com" aria-describedby="email-note" />
+        <p className="field-note" id="email-note">Activa o cancela el aviso semanal de cortes. Recibirás una confirmación por correo.</p>
         <button className="primary-button" type="button" disabled={activationInProgress || !localidad || !addressIsReady(address) || (!isSubscribed && !emailIsValid(email))} onClick={handleSubscription}>{activationInProgress ? (isSubscribed ? 'Cancelando suscripción...' : 'Activando suscripción...') : saved ? (isSubscribed ? '✓ Suscripción activa' : '✓ Suscripción cancelada') : (isSubscribed ? 'Darse de baja' : 'Activar suscripción')}</button>
       </section>
 
-      <section className={`status-panel ${hasOutage ? 'alert' : ''}`}>
+      <section className={`status-panel ${hasOutage ? 'alert' : ''}`} aria-live="polite">
         <div className="status-icon">{hasOutage ? '!' : '✓'}</div>
         <div><p className="status-label">{hasOutage ? 'AVISO PARA TI' : 'ESTADO DE ESTA SEMANA'}</p><h2>{hasOutage ? `Hay un corte en ${localidad}` : localidad ? `Sin cortes para ${address || localidad}` : 'Guarda tu dirección para empezar'}</h2><p>{hasOutage ? `Tu dirección está en ${localidad}.` : 'Aquí aparecerán los cortes que coincidan con tu zona.'}</p></div>
       </section>
