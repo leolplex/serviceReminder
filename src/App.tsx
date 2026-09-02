@@ -184,7 +184,7 @@ function App() {
         <div className="ember-spirit" aria-hidden="true"><span className="flame-core" /><span className="flame-face" /><span className="flame-smile" /></div>
         <p className="kicker">AVISOS LOCALES</p>
         <h1>Que el corte<br /><em>no te tome por sorpresa.</em></h1>
-        <p className="intro-copy">Guarda tu localidad y revisa el boletín dominical de acueducto. Nority encuentra tu zona y te avisa.</p>
+        <p className="intro-copy">Guarda tu localidad y revisa el boletín de los viernes de acueducto. Nority encuentra tu zona y te avisa.</p>
       </section>
 
       {feedback && <div className={`feedback-toast ${feedback.type}`} role={feedback.type === 'error' ? 'alert' : 'status'}><span aria-hidden="true">{feedback.type === 'success' ? '✓' : '!'}</span>{feedback.message}</div>}
