@@ -35,3 +35,26 @@ create table public.email_sends (
 -- service role key, que bypasea RLS. No se expone a la API pública porque
 -- la anon key viaja incrustada en el bundle de la PWA (riesgo de fuga PII).
 alter table public.email_sends enable row level security;
+
+-- Registro de intentos de correo de prueba para el rate limit de la edge
+-- function send-subscription-email. Cada fila es un intento del usuario.
+create table public.email_rate_limits (
+  id bigint generated always as identity primary key,
+  user_id uuid references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+
+create index email_rate_limits_user_created
+on public.email_rate_limits (user_id, created_at);
+
+alter table public.email_rate_limits enable row level security;
+
+-- Cada usuario solo puede leer/insertar sus propios intentos (auth.uid() = user_id).
+-- Así no se expone información entre usuarios y se impide sobrepasar el límite.
+create policy "Users can read their own rate limits"
+on public.email_rate_limits for select
+using (auth.uid() = user_id);
+
+create policy "Users can insert their own rate limits"
+on public.email_rate_limits for insert
+with check (auth.uid() = user_id);
