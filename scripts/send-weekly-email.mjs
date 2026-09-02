@@ -1,54 +1,11 @@
 import { readFile } from 'node:fs/promises'
+import { addressWithinRange, normalize, weekStartOf } from '../src/outageLogic.ts'
 
 const required = ['EMAILJS_SERVICE_ID', 'EMAILJS_TEMPLATE_ID', 'EMAILJS_PUBLIC_KEY', 'EMAILJS_PRIVATE_KEY', 'SUPABASE_URL', 'SUPABASE_SECRET_KEY']
 const missing = required.filter((name) => !process.env[name])
 if (missing.length > 0) {
 	console.log(`Email omitido: faltan secrets ${missing.join(', ')}`)
 	process.exit(0)
-}
-
-const normalize = (value) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim()
-
-/** Misma nomenclatura que src/outageLogic.ts */
-const VIA_CALLE = '(?:avenida\\s+calle|av\\.?\\s*calle|ac\\.?|calle|cll|cl\\.?|callejon|cj\\.?|diagonal|dg\\.?)'
-const VIA_CARRERA = '(?:avenida\\s+carrera|av\\.?\\s*carrera|ak\\.?|carrera|cra\\.?|kra\\.?|transversal|transv\\.?|tv\\.?|tr\\.?|circular|circ\\.?)'
-const VIA_NUMBER = '(\\d{1,4}[a-z]{0,2}(?:\\s*bis)?)'
-const VIA_NUMBER_RANGE = `(${VIA_NUMBER})(?:\\s*(?:sur|norte|este|occidente))?`
-const CALLE_KEYWORDS = ['calle', 'cll', 'cl', 'callejon', 'cj', 'ac', 'diagonal', 'dg']
-
-const addressNumbers = (address) => {
-	const match = normalize(address).match(new RegExp(`(${VIA_CALLE}|${VIA_CARRERA})\\s*${VIA_NUMBER}(?:\\s*(?:sur|norte|este|occidente))?[^\\d]*#?\\s*(\\d{1,4}[a-z]{0,2})`))
-	if (!match) return undefined
-	const via = match[1]
-	const first = Number.parseInt(match[2], 10)
-	const second = Number.parseInt(match[3], 10)
-	return CALLE_KEYWORDS.some((keyword) => via.includes(keyword))
-		? { street: first, carrera: second }
-		: { street: second, carrera: first }
-}
-
-const extractRange = (detail, kind) => {
-	const labels = kind === 'calle' ? VIA_CALLE : VIA_CARRERA
-	const matches = [...normalize(detail).matchAll(new RegExp(`${labels}\\s*${VIA_NUMBER_RANGE}`, 'gi'))]
-	const numbers = matches.map((match) => Number.parseInt(match[2], 10))
-	if (numbers.length === 0) return undefined
-	return [Math.min(...numbers), Math.max(...numbers)]
-}
-
-const inRange = (address, range) => {
-	const numbers = addressNumbers(address)
-	const streetRange = extractRange(range, 'calle')
-	const carreraRange = extractRange(range, 'carrera')
-	if (!numbers || !streetRange || !carreraRange) return false
-	return numbers.street >= streetRange[0] && numbers.street <= streetRange[1]
-		&& numbers.carrera >= carreraRange[0] && numbers.carrera <= carreraRange[1]
-}
-
-const weekStartOf = (dateValue) => {
-	const date = new Date(`${dateValue}T12:00:00`)
-	const day = date.getDay() || 7
-	date.setDate(date.getDate() - day + 1)
-	return date.toISOString().slice(0, 10)
 }
 
 const supabaseHeaders = () => ({
@@ -73,7 +30,7 @@ for (const profile of profiles) {
 		const noticeDate = new Date(`${notice.date}T12:00:00`)
 		return noticeDate >= start
 			&& normalize(notice.localidad).includes(normalize(profile.localidad))
-			&& inRange(profile.address, notice.addressRange ?? notice.detail ?? '')
+			&& addressWithinRange(profile.address, notice.addressRange ?? notice.detail ?? '')
 	})
 	const weeks = [...new Set(applicable.map((notice) => weekStartOf(notice.date)))]
 	for (const week of weeks) {

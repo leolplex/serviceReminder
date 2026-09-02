@@ -2,22 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ACUEDUCTO_SOURCE_URL } from './acueductoScraper'
 import { emailIsValid } from './emailService'
 import { emailNotifier, outageSource, profileStore, scheduler, userNotifier } from './norityServices'
-import { addressIsReady, noticeAppliesToAddress, type OutageNotice } from './outageLogic'
-
-const LOCALIDADES = [
-  'Usaquén', 'Chapinero', 'Santa Fe', 'San Cristóbal', 'Usme',
-  'Tunjuelito', 'Bosa', 'Kennedy', 'Fontibón', 'Engativá', 'Suba',
-  'Barrios Unidos', 'Teusaquillo', 'Los Mártires', 'Antonio Nariño',
-  'Puente Aranda', 'La Candelaria', 'Rafael Uribe Uribe', 'Ciudad Bolívar',
-  'Sumapaz',
-].sort((first, second) => first.localeCompare(second, 'es'))
-
-const weekStartOf = (dateValue: string) => {
-  const date = new Date(`${dateValue}T12:00:00`)
-  const day = date.getDay() || 7
-  date.setDate(date.getDate() - day + 1)
-  return date.toISOString().slice(0, 10)
-}
+import { LOCALIDADES } from './localidades'
+import { addressIsReady, noticeAppliesToAddress, weekStartOf, type OutageNotice } from './outageLogic'
 
 const currentMonday = () => weekStartOf(new Date().toISOString().slice(0, 10))
 

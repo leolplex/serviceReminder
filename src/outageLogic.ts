@@ -78,6 +78,17 @@ export const isDateInWeek = (date: string, weekStart: string) => {
   return target >= start && target <= end
 }
 
+/**
+ * Lunes de la semana a la que pertenece la fecha (formato YYYY-MM-DD).
+ * Fuerza mediodía para evitar desfases por zona horaria / horario de ahorro.
+ */
+export const weekStartOf = (dateValue: string) => {
+  const date = new Date(`${dateValue}T12:00:00`)
+  const day = date.getDay() || 7
+  date.setDate(date.getDate() - day + 1)
+  return date.toISOString().slice(0, 10)
+}
+
 export const hasOutageThisWeek = (
   bulletin: string,
   localidad: string,
