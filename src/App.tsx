@@ -202,7 +202,7 @@ function App() {
         <div className="ember-spirit" aria-hidden="true"><span className="flame-core" /><span className="flame-face" /><span className="flame-smile" /></div>
         <p className="kicker">AVISOS LOCALES</p>
         <h1>Que el corte<br /><em>no te tome por sorpresa.</em></h1>
-        <p className="intro-copy">Guarda tu localidad y revisa el boletín de los viernes de acueducto. Nority encuentra tu zona y te avisa.</p>
+        <p className="intro-copy">Guarda tu localidad y revisa el boletín de los viernes de acueducto. Nority te avisa por correo cuando tu zona está en un rango de corte.</p>
       </section>
 
       {feedback && <div className={`feedback-toast ${feedback.type}`} role={feedback.type === 'error' ? 'alert' : 'status'}><span aria-hidden="true">{feedback.type === 'success' ? '✓' : '!'}</span>{feedback.message}</div>}
@@ -230,7 +230,7 @@ function App() {
         {localNotices.length > 0 ? <div className="notice-list">{localNotices.map((notice) => <article className="notice-card" key={`${notice.date}-${notice.localidad}-${notice.addressRange}`}><p className="notice-date">{new Date(`${notice.date}T12:00:00`).toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })}</p><h3>{notice.localidad}</h3><p><strong>Barrios:</strong> {notice.barrios || 'Sector indicado por Acueducto'}</p><p><strong>Horario:</strong> {notice.hours || 'Consultar en la fuente oficial'}</p><p><strong>Rango:</strong> {notice.addressRange || 'Consultar en la fuente oficial'}</p></article>)}</div> : <div className="empty-notices">Consulta Acueducto para ver los barrios afectados por tu dirección.</div>}
         <div className="button-row"><button className="secondary-button" type="button" onClick={() => void syncWithAcueducto()}>↻ Consultar Acueducto</button></div>
         <p className="sync-status" aria-live="polite">{visibleSyncStatus} · <a href={ACUEDUCTO_SOURCE_URL} target="_blank" rel="noreferrer">Ver fuente oficial</a></p>
-        <p className="schedule-note">✉ El email semanal se envía automáticamente los viernes 7:00 p. m. (hora Bogotá) si tu dirección está en un rango. Aquí la consulta es manual.</p>
+        <p className="schedule-note">✉ El email semanal se envía automáticamente los viernes 7:00 p. m. (hora Bogotá) si tu dirección está en un rango. Las notificaciones del navegador solo se muestran con la app abierta. Aquí la consulta es manual.</p>
       </section>
     </main>
   )
