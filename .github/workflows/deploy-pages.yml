@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
   schedule:
-    # Snapshot refresh + deploy cada 6 horas
+    # Cada sábado 00:00 UTC (viernes 7 p. m., hora Bogotá): refresca el snapshot
+    # del boletín y re-despliega.
     - cron: '0 0 * * 6'
   workflow_dispatch:
 
@@ -32,6 +33,8 @@ jobs:
         run: npm ci
       - name: Test
         run: npm test
+      - name: Lint
+        run: npm run lint
       - name: Update official outage snapshot
         if: github.event_name != 'push' || github.actor != 'github-actions[bot]'
         run: |

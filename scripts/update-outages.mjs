@@ -12,10 +12,9 @@ const html = await response.text()
 const notices = scrapeOfficialHtml(html, localidades)
 
 const payload = { updatedAt: new Date().toISOString(), notices }
-let existing = null
+let existing
 try {
-  const previous = await readFile(outputPath, 'utf8')
-  existing = JSON.parse(previous)
+  existing = JSON.parse(await readFile(outputPath, 'utf8'))
 } catch {
   existing = null
 }
