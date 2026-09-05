@@ -1,125 +1,157 @@
 {
-  "updatedAt": "2026-08-31T02:01:43.339Z",
+  "updatedAt": "2026-09-05T02:13:55.808Z",
   "notices": [
     {
-      "localidad": "Santa Fe",
-      "date": "2026-08-31",
-      "barrios": "Paloquemao, Usatama, San Facon, Ricaurte, Samper Mendoza, La Sabana, Eduardo Santos, Restrepo, Quiroga, Santander, San Antonio, La Estanzuela, San Jorge, Gustavo Restrepo",
-      "addressRange": "De la Calle 19 a la Calle 54 Sur, entre la Carrera 13 a la Carrera 25",
-      "hours": "8:00 p.m. 2 Horas",
-      "detail": "De la Calle 19 a la Calle 54 Sur, entre la Carrera 13 a la Carrera 25"
-    },
-    {
-      "localidad": "Suba",
-      "date": "2026-09-01",
-      "barrios": "Los Naranjos",
-      "addressRange": "De la Carrera 85 a la Carrera 88D, entre la Calle 129 a la Calle 131C",
-      "hours": "10:00 a.m. 24 horas",
-      "detail": "De la Carrera 85 a la Carrera 88D, entre la Calle 129 a la Calle 131C"
-    },
-    {
-      "localidad": "Ciudad Bolívar",
-      "date": "2026-09-01",
-      "barrios": "Compartir, Juan Pablo II, Sumapaz, Gibraltar Sur",
-      "addressRange": "De la Calle 67C Sur a la Calle 64D Sur, entre la Carrera 18L a la Carrera 19 Bis",
-      "hours": "9:00 a.m. 24 horas",
-      "detail": "De la Calle 67C Sur a la Calle 64D Sur, entre la Carrera 18L a la Carrera 19 Bis"
-    },
-    {
-      "localidad": "Rafael Uribe Uribe",
-      "date": "2026-09-01",
-      "barrios": "San Isidro, Lomas, Barcelona Sur, Cerros del Oriente, Puerto Rico, Granjas de Santa Sofia, Granjas de San Pablo, La Resurrección, Marco Fidel Suarez I, Arboleda Sur, El Playón, Guiparma, Molinos del Sur",
-      "addressRange": "De la Calle 30A Sur a la Calle 51 Sur, entre la Carrera 5A a la Carrera 13K",
-      "hours": "10:00 a.m. 12 horas",
-      "detail": "De la Calle 30A Sur a la Calle 51 Sur, entre la Carrera 5A a la Carrera 13K"
-    },
-    {
       "localidad": "Usme",
-      "date": "2026-09-01",
-      "barrios": "El Portal Urbano, El Porvenir de Los Soches, El Nuevo Portal II, El Refugio I, El Nuevo Portal, El Nuevo Portal II Rural, Portal del Divino, Portal Rural II",
-      "addressRange": "De la Diagonal 97 Sur a la Calle 115 Sur, entre la Carrera 8 Este a la Carrera 13 Este",
-      "hours": "10:00 a.m. 4 horas",
-      "detail": "De la Diagonal 97 Sur a la Calle 115 Sur, entre la Carrera 8 Este a la Carrera 13 Este"
+      "date": "2026-09-07",
+      "barrios": "La Picota, Santa Marta, La Aurora, Brasilia, Marichuela, La Andrea, Santa Librada, Monteblanco, Valles de Cafam, Chuniza, Gran Yomasa, San Juan Bautista, Granada Sur, Nuevo San Andres, Barranquillita, Salazar Usme, La Cabaña, Cami Santa Librada",
+      "addressRange": "De la Transversal 4A Este a la Transversal 14, entre la Calle 62 Sur a la Calle 97 Sur",
+      "hours": "10:00 a.m. 24 horas",
+      "detail": "De la Transversal 4A Este a la Transversal 14, entre la Calle 62 Sur a la Calle 97 Sur"
     },
     {
-      "localidad": "Antonio Nariño",
-      "date": "2026-09-02",
-      "barrios": "Restrepo, Restrepo Occidental",
-      "addressRange": "De la Calle 13 Sur a la Calle 22 Sur, entre la Carrera 14 a la Carrera 24G",
-      "hours": "08:00 a.m. 10 horas",
-      "detail": "De la Calle 13 Sur a la Calle 22 Sur, entre la Carrera 14 a la Carrera 24G"
+      "localidad": "Fontibón",
+      "date": "2026-09-07",
+      "barrios": "Modelia, Santa Cecilia, Baleares, Villa del Pinar, Centro Comercial Hayuelos, Prado Grande, Taragona, San Felipe, Villamar, Fontibón Oriental, San Pablo Oriental, Zona Franca, Belén, Fontibón, Villa Carmenza, Guadual Fontibón, San Ignacio, Funza, Madrid, Mosquera Totarento, Salamanca Avira",
+      "addressRange": "De la Calle 22 a la Avenida Calle 26, entre la Avenida Boyacá a la Carrera 116",
+      "hours": "10:00 a.m. 4 horas",
+      "detail": "De la Calle 22 a la Avenida Calle 26, entre la Avenida Boyacá a la Carrera 116"
+    },
+    {
+      "localidad": "Chapinero",
+      "date": "2026-09-08",
+      "barrios": "El Chicó, Chicó Norte, Chicó Norte II Sector",
+      "addressRange": "De la Carrera 8A a la Carrera 15, entre la Calle 88 a la Calle 100",
+      "hours": "10:00 a.m. 24 horas",
+      "detail": "De la Carrera 8A a la Carrera 15, entre la Calle 88 a la Calle 100"
     },
     {
       "localidad": "San Cristóbal",
-      "date": "2026-09-02",
-      "barrios": "Verona, Ensueño, Sierra Morena",
-      "addressRange": "De la Calle 68 Sur a la Diagonal 69 Sur, entre la Carrera 45B a la Transversal 70D",
+      "date": "2026-09-08",
+      "barrios": "San Martín de Loba",
+      "addressRange": "De la Diagonal 39 Sur a la Diagonal 48D Sur, entre la Carrera 2 Este Carrera 3C Bis Este",
       "hours": "9:00 a.m. 24 horas",
-      "detail": "De la Calle 68 Sur a la Diagonal 69 Sur, entre la Carrera 45B a la Transversal 70D"
+      "detail": "De la Diagonal 39 Sur a la Diagonal 48D Sur, entre la Carrera 2 Este Carrera 3C Bis Este"
     },
     {
-      "localidad": "Usaquén",
-      "date": "2026-09-02",
-      "barrios": "Las Orquídeas, Toberín",
-      "addressRange": "De la Calle 163A a la Calle 170, entre la Carrera 45 a la Carrera 15",
+      "localidad": "Teusaquillo",
+      "date": "2026-09-08",
+      "barrios": "Acevedo Tejada, Gran América, El Recuerdo, Quinta Paredes, Corferias, Centro Nariño, Clínica Fundadores",
+      "addressRange": "De la Avenida Calle 26 a la Avenida de las Américas, entre la Carrera 30 a la Carrera 42B",
+      "hours": "10:00 a.m. 4 horas",
+      "detail": "De la Avenida Calle 26 a la Avenida de las Américas, entre la Carrera 30 a la Carrera 42B"
+    },
+    {
+      "localidad": "Suba",
+      "date": "2026-09-09",
+      "barrios": "Prado Pinzón, Victoria Norte",
+      "addressRange": "De la Carrera 45 a la Carrera 56, entre la Calle 138 a la Calle 147A",
+      "hours": "8:00 a.m. 24 horas",
+      "detail": "De la Carrera 45 a la Carrera 56, entre la Calle 138 a la Calle 147A"
+    },
+    {
+      "localidad": "Suba",
+      "date": "2026-09-09",
+      "barrios": "Lisboa, Santa Cecilia, Santa Rita Suba",
+      "addressRange": "De la Carrera 150B a la Carrera 160B, entre la Calle 129B a la Calle 140",
       "hours": "10:00 a.m. 24 horas",
-      "detail": "De la Calle 163A a la Calle 170, entre la Carrera 45 a la Carrera 15"
-    },
-    {
-      "localidad": "La Candelaria",
-      "date": "2026-09-03",
-      "barrios": "Germania, Las Aguas",
-      "addressRange": "De la Calle 18 a la Calle 12D, entre la Carrera 5 Este a la Carrera 1A",
-      "hours": "08:00 a.m. 10 horas",
-      "detail": "De la Calle 18 a la Calle 12D, entre la Carrera 5 Este a la Carrera 1A"
-    },
-    {
-      "localidad": "Barrios Unidos",
-      "date": "2026-09-03",
-      "barrios": "Galerías, Benjamín Herrera, San Luis",
-      "addressRange": "De la Calle 53 Bis a la Calle 68, entre la Carrera 24 a la Carrera 30",
-      "hours": "9:00 a.m. 24 horas",
-      "detail": "De la Calle 53 Bis a la Calle 68, entre la Carrera 24 a la Carrera 30"
+      "detail": "De la Carrera 150B a la Carrera 160B, entre la Calle 129B a la Calle 140"
     },
     {
       "localidad": "Los Mártires",
-      "date": "2026-09-03",
-      "barrios": "Santa Isabel",
-      "addressRange": "De la Carrera 27 a la Avenida Carrera 30, entre la Calle 8 Sur a la Calle 12A Sur",
-      "hours": "9:00 a.m. 24 horas",
-      "detail": "De la Carrera 27 a la Avenida Carrera 30, entre la Calle 8 Sur a la Calle 12A Sur"
+      "date": "2026-09-09",
+      "barrios": "Paloquemao",
+      "addressRange": "De la Avenida Carrera 27 a la Avenida Carrera 30, entre la Avenida Calle 13 a la Avenida Calle 22",
+      "hours": "8:00 a.m. 27 horas",
+      "detail": "De la Avenida Carrera 27 a la Avenida Carrera 30, entre la Avenida Calle 13 a la Avenida Calle 22"
     },
     {
-      "localidad": "Kennedy",
-      "date": "2026-09-03",
-      "barrios": "Provivienda, Carvajal",
-      "addressRange": "De la Avenida Calle 26 Sur a la Avenida Carrera 72, entre la Transversal 72N a la Transversal 68F",
+      "localidad": "San Cristóbal",
+      "date": "2026-09-09",
+      "barrios": "El Triángulo, Aguas Clara, Tibaqué I",
+      "addressRange": "De la Calle 14 Sur a la Calle 31 Sur, entre la Carrera 26 Este a la Carrera 12D Este",
       "hours": "9:00 a.m. 24 horas",
-      "detail": "De la Avenida Calle 26 Sur a la Avenida Carrera 72, entre la Transversal 72N a la Transversal 68F"
+      "detail": "De la Calle 14 Sur a la Calle 31 Sur, entre la Carrera 26 Este a la Carrera 12D Este"
+    },
+    {
+      "localidad": "Santa Fe",
+      "date": "2026-07-20",
+      "barrios": "Alameda, Las Nieves, La Favorita, San Victorino, La Capuchina, Veracruz, La Catedral, Santa Inés, La Concordia, Las Aguas Baja, Centro Administrativo, Santa Bárbara, San Bernardo, Las Hortúas, Las Cruces, Modelo Sur, San Antonio, Policarpa, Caracas, Sosiego, Nariño, San Javier, Santa Ana Sur, San José Sur, Buenos Aires, La María, 20 de Julio Parte Baja, Hospitales La Hortua, Santa Clara, Clínica Bogotá, Cancerológico, Materno Infantil, Salud Coop, Hospital San Carlos",
+      "addressRange": "De la Avenida Calle 26 a la Calle 32 Sur, entre la Carrera 2 a la Carrera 18",
+      "hours": "10:00 a.m. 4 horas",
+      "detail": "De la Avenida Calle 26 a la Calle 32 Sur, entre la Carrera 2 a la Carrera 18"
+    },
+    {
+      "localidad": "Ciudad Bolívar",
+      "date": "2026-09-09",
+      "barrios": "Bellavista Lucero Alto, Casa de Teja, Central de Mezclas, Compartir, Gibraltar Sur, La Alameda, Las Acacias, Lucero Alto, Lucero del Sur, Meissen, México, Quintas del Sur, Ronda, Sotavento",
+      "addressRange": "De la Calle 59B Sur a la Calle 71B Sur, entre la Carrera 16 a la Carrera 19A",
+      "hours": "Miércoles 09 10:00",
+      "detail": "De la Calle 59B Sur a la Calle 71B Sur, entre la Carrera 16 a la Carrera 19A"
+    },
+    {
+      "localidad": "Suba",
+      "date": "2026-09-10",
+      "barrios": "Andes Norte, Julio Flórez, Santa Rosa",
+      "addressRange": "De la Transversal 55 a la Carrera 71, entre la Calle 100 a la Calle 116",
+      "hours": "10:00 a.m. 24 horas",
+      "detail": "De la Transversal 55 a la Carrera 71, entre la Calle 100 a la Calle 116"
+    },
+    {
+      "localidad": "San Cristóbal",
+      "date": "2026-09-10",
+      "barrios": "Bella Vista Sur, San Vicente, Santa Inés Sur, Los Alpes",
+      "addressRange": "De la Carrera 11 Este a la Carrera 6C Este, entre la Calle 32 Sur a la Calle 41A Sur",
+      "hours": "9:00 a.m. 24 horas",
+      "detail": "De la Carrera 11 Este a la Carrera 6C Este, entre la Calle 32 Sur a la Calle 41A Sur"
+    },
+    {
+      "localidad": "Tunjuelito",
+      "date": "2026-09-10",
+      "barrios": "San Carlos, San Benito, Tunjuelito, Abraham Lincoln",
+      "addressRange": "De la Avenida Carrera 19C a la Carrera 7, entre la Avenida Calle 51 Sur a la Calle 59B Sur",
+      "hours": "9:00 a.m. 24 horas",
+      "detail": "De la Avenida Carrera 19C a la Carrera 7, entre la Avenida Calle 51 Sur a la Calle 59B Sur"
     },
     {
       "localidad": "Usme",
-      "date": "2026-09-03",
-      "barrios": "Brazuelos, Usminia, Villa Anita, La Requilina, El Uval, Usme, Olarte",
-      "addressRange": "De la Calle 101 Sur a la Calle 140 Sur, entre la Carrera 9 a la Carrera 3 Este",
-      "hours": "10:00 p.m. 4 horas",
-      "detail": "De la Calle 101 Sur a la Calle 140 Sur, entre la Carrera 9 a la Carrera 3 Este"
+      "date": "2026-09-10",
+      "barrios": "La Huerta, El Tuno, La Esperanza Usme, Puerta al Llano",
+      "addressRange": "De la Calle 89C Sur a la Calle 118B Sur, entre la Carrera 8 Este a la Carrera 1D",
+      "hours": "9:00 a.m. 24 horas",
+      "detail": "De la Calle 89C Sur a la Calle 118B Sur, entre la Carrera 8 Este a la Carrera 1D"
+    },
+    {
+      "localidad": "Ciudad Bolívar",
+      "date": "2026-09-10",
+      "barrios": "Rafael Escamilla, Madelena",
+      "addressRange": "De la Avenida Calle 57R Sur a la Diagonal 67A Sur, entre la Avenida Carrera 70C a la Carrera 64",
+      "hours": "10:00 a.m. 24 horas",
+      "detail": "De la Avenida Calle 57R Sur a la Diagonal 67A Sur, entre la Avenida Carrera 70C a la Carrera 64"
+    },
+    {
+      "localidad": "Teusaquillo",
+      "date": "2026-09-10",
+      "barrios": "Prados del Salitre, Ciudad Salitre, Ciudadela El Salitre, Centro Comercial Gran Estación y Secretaría de Educación (SED)",
+      "addressRange": "De la Diagonal 22A a la Avenida Calle 26, entre la Carrera 50 a la Carrera 68",
+      "hours": "10:00 a.m. 4 horas",
+      "detail": "De la Diagonal 22A a la Avenida Calle 26, entre la Carrera 50 a la Carrera 68"
     },
     {
       "localidad": "Kennedy",
-      "date": "2026-09-03",
-      "barrios": "Argelia II, Bosa, Carmelo Sur, Casa Blanca Sur, Class, Class Roma, El Carmelo, El Class, El Danubio Azul, La Paz Kennedy, Portal de Cali, Sinai",
-      "addressRange": "De la Avenida Carrera 80 a la Carrera 82G Bis, entre la Calle 54 Sur a la Calle 58A Sur De la Carrera 82A Bis a la Avenida Carrera 86, entre la Calle 54 Sur a la Calle 60 Sur",
+      "date": "2026-09-10",
+      "barrios": "Américas Occidental, Castilla, Castilla (Al Sur de la Ac 8), Catania, Ciudad Techo, Condado de Castilla, Cooperativa de Sub-Oficiales, Jardines de Castilla, Lagos de Castilla, Las Dos Avenidas, Pío XI, Pío XII, Portal de las Américas, Prados de Castilla, Rincón de Castilla, Rincón de los Ángeles, Santa María de los Ángeles, Villa Castilla, Villas de Castilla",
+      "addressRange": "De la Avenida Calle 3 a la Avenida Calle 8, entre la Avenida Carrera 72 a la Avenida Carrera 86",
       "hours": "10:00 a.m. 24 horas",
-      "detail": "De la Avenida Carrera 80 a la Carrera 82G Bis, entre la Calle 54 Sur a la Calle 58A Sur De la Carrera 82A Bis a la Avenida Carrera 86, entre la Calle 54 Sur a la Calle 60 Sur"
+      "detail": "De la Avenida Calle 3 a la Avenida Calle 8, entre la Avenida Carrera 72 a la Avenida Carrera 86"
     },
     {
-      "localidad": "Engativá",
-      "date": "2026-09-04",
-      "barrios": "Jardín Botánico, Normandía, CUR Compensar, Centro de Alto Rendimiento Coldeportes, Complejo El Salitre, Instituto Técnico Centro Don Bosco, Colegio Militar Simón Bolívar, Universidad Libre",
-      "addressRange": "De la Calle 26 a la Calle 63, entre la Carrera 68 a la Carrera 72",
+      "localidad": "Santa Fe",
+      "date": "2026-09-11",
+      "barrios": "Samper Mendoza, Florida, Colseguros, Santa Fe, Paloquemao, El Listón, Usatama y La Favorita",
+      "addressRange": "De la Avenida Calle 19 a la Calle 24, entre la Carrera 18 a la Carrera 30",
       "hours": "10:00 a.m. 4 horas",
-      "detail": "De la Calle 26 a la Calle 63, entre la Carrera 68 a la Carrera 72"
+      "detail": "De la Avenida Calle 19 a la Calle 24, entre la Carrera 18 a la Carrera 30"
     }
   ]
 }
