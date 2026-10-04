@@ -14,11 +14,17 @@ const supabaseHeaders = () => ({
 	'Content-Type': 'application/json',
 })
 
+const requireSupabaseOk = async (response, operation) => {
+	if (!response.ok) {
+		throw new Error(`Supabase ${operation} respondió ${response.status}: ${await response.text()}`)
+	}
+}
+
 const snapshot = JSON.parse(await readFile('public/outages.json', 'utf8'))
 const profileResponse = await fetch(`${process.env.SUPABASE_URL}/rest/v1/profiles?select=email,address,localidad`, {
 	 headers: supabaseHeaders(),
 })
-if (!profileResponse.ok) throw new Error(`Supabase respondió ${profileResponse.status}`)
+await requireSupabaseOk(profileResponse, 'GET public.profiles')
 const profiles = await profileResponse.json()
 
 const start = new Date(weekStartOf(new Date().toISOString().slice(0, 10)) + 'T12:00:00')
@@ -39,7 +45,7 @@ for (const profile of profiles) {
 		const sentResponse = await fetch(`${process.env.SUPABASE_URL}/rest/v1/email_sends?select=week_start&email=eq.${encodeURIComponent(profile.email)}&week_start=eq.${week}`, {
 			headers: supabaseHeaders(),
 		})
-		if (!sentResponse.ok) throw new Error(`Supabase respondió ${sentResponse.status}`)
+		await requireSupabaseOk(sentResponse, 'GET public.email_sends')
 		const existing = await sentResponse.json()
 		if (existing.length > 0) {
 			skipped += 1
@@ -69,7 +75,7 @@ for (const profile of profiles) {
 			headers: supabaseHeaders(),
 			body: JSON.stringify({ email: profile.email, week_start: week }),
 		})
-		if (!insertResponse.ok) throw new Error(`Supabase insert respondió ${insertResponse.status}`)
+		await requireSupabaseOk(insertResponse, 'POST public.email_sends')
 		sent += 1
 	}
 }

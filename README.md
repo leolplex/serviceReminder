@@ -37,3 +37,23 @@ Los despliegues se ejecutan automáticamente desde GitHub Actions al actualizar 
 La información proviene del boletín semanal oficial del Acueducto de Bogotá.
 
 https://www.acueducto.com.co/wps/portal/EAB2/Home/atencion-al-usuario/programacion_cortes/cortes+de+la+semana
+
+## Configuración de Supabase
+
+Antes de activar el envío semanal, aplica el esquema de `supabase/schema.sql` al proyecto de Supabase. Si `profiles` ya existe, ejecuta solo el bloque que crea `public.email_sends` y activa RLS; no vuelvas a ejecutar la creación de `profiles`.
+
+El workflow consulta `public.email_sends` para evitar duplicar correos. Si Supabase responde que no encuentra esa tabla en el esquema, créala desde el SQL Editor:
+
+```sql
+create table if not exists public.email_sends (
+  id bigint generated always as identity primary key,
+  email text not null,
+  week_start date not null,
+  created_at timestamptz not null default now(),
+  unique (email, week_start)
+);
+
+alter table public.email_sends enable row level security;
+```
+
+La clave de servicio de Supabase debe estar configurada como el secret `SUPABASE_SECRET_KEY` en GitHub Actions; no uses la clave publicable para este workflow.
