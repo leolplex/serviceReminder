@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises'
-import { noticeMatchesAddress, weekStartOf } from '../src/outageLogic.ts'
+import { noticeMatchesProfile, weekStartOf } from '../src/outageLogic.ts'
 
 const required = ['EMAILJS_SERVICE_ID', 'EMAILJS_TEMPLATE_ID', 'EMAILJS_PUBLIC_KEY', 'EMAILJS_PRIVATE_KEY', 'SUPABASE_URL', 'SUPABASE_SECRET_KEY']
 const missing = required.filter((name) => !process.env[name])
@@ -35,7 +35,7 @@ for (const profile of profiles) {
 	const applicable = snapshot.notices.filter((notice) => {
 		const noticeDate = new Date(`${notice.date}T12:00:00`)
 		return noticeDate >= start
-			&& noticeMatchesAddress(notice, profile.address, profile.barrio)
+			&& noticeMatchesProfile(notice, profile.address, profile.localidad, profile.barrio)
 	})
 	const weeks = [...new Set(applicable.map((notice) => weekStartOf(notice.date)))]
 	for (const week of weeks) {

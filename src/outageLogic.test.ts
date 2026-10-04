@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { addressIsReady, addressWithinRange, bulletinMentionsLocalidad, hasOutageThisWeek, isDateInWeek, neighborhoodsInNotice, noticeAppliesToAddress, noticeIncludesNeighborhood, type OutageNotice } from './outageLogic'
+import { addressIsReady, addressWithinRange, bulletinMentionsLocalidad, hasOutageThisWeek, isDateInWeek, neighborhoodsInNotice, noticeAppliesToAddress, noticeIncludesNeighborhood, noticeMatchesProfile, type OutageNotice } from './outageLogic'
 
 const notices: OutageNotice[] = [{
   localidad: 'Kennedy',
@@ -25,10 +25,10 @@ describe('outage logic', () => {
     expect(isDateInWeek('2026-09-01', '2026-08-24')).toBe(false)
   })
 
-  it('reports a cut based on the address and week, not its locality label', () => {
-    expect(hasOutageThisWeek(notices, '2026-08-24', 'Calle 50 # 5-20', 'Normandia')).toBe(true)
-    expect(hasOutageThisWeek(notices, '2026-08-24', 'Calle 50 # 5-20', 'Los Andes')).toBe(false)
-    expect(hasOutageThisWeek(notices, '2026-08-31', 'Calle 50 # 5-20', 'Normandia')).toBe(false)
+  it('matches the address and week when either locality or neighborhood matches', () => {
+    expect(hasOutageThisWeek(notices, '2026-08-24', 'Calle 50 # 5-20', 'Kennedy', 'Normandia')).toBe(true)
+    expect(hasOutageThisWeek(notices, '2026-08-24', 'Calle 50 # 5-20', 'Kennedy', 'Los Andes')).toBe(true)
+    expect(hasOutageThisWeek(notices, '2026-08-31', 'Calle 50 # 5-20', 'Kennedy', 'Normandia')).toBe(false)
   })
 
   it('checks the address against the Calle and Carrera boundaries', () => {
@@ -70,7 +70,7 @@ describe('outage logic', () => {
       date: '2026-09-04',
       addressRange: 'De la Calle 26 a la Calle 63, entre la Carrera 68 a la Carrera 72',
     }
-    expect(noticeAppliesToAddress({ ...notice, barrios: 'Normandia' }, '2026-08-31', 'Carrera 71#49A-31', 'Normandía')).toBe(true)
+    expect(noticeAppliesToAddress({ ...notice, barrios: 'Normandia' }, '2026-08-31', 'Carrera 71#49A-31', 'Engativá', 'Normandía')).toBe(true)
   })
 
   it('shows a matching next-week notice in the UI when the current date is near the week boundary', () => {
@@ -80,13 +80,13 @@ describe('outage logic', () => {
       addressRange: 'De la Calle 26 a la Calle 63, entre la Carrera 68 a la Carrera 72',
     }
     const currentWeek = '2026-08-25'
-    expect(noticeAppliesToAddress({ ...notice, barrios: 'Normandia' }, currentWeek, 'Carrera 71#49A-31', 'Normandía')).toBe(false)
+    expect(noticeAppliesToAddress({ ...notice, barrios: 'Normandia' }, currentWeek, 'Carrera 71#49A-31', 'Engativá', 'Normandía')).toBe(false)
   })
 
   it('does not alert an address outside the published range', () => {
     const addressNotice: OutageNotice[] = [{ localidad: 'Kennedy', date: '2026-08-25', barrios: 'Normandia', detail: 'De la Calle 42 a la Calle 61B, entre la Carrera 3 a la Carrera 9' }]
-    expect(hasOutageThisWeek(addressNotice, '2026-08-24', 'Calle 50 # 5-20', 'Normandia')).toBe(true)
-    expect(hasOutageThisWeek(addressNotice, '2026-08-24', 'Calle 70 # 5-20', 'Normandia')).toBe(false)
+    expect(hasOutageThisWeek(addressNotice, '2026-08-24', 'Calle 50 # 5-20', 'Kennedy', 'Normandia')).toBe(true)
+    expect(hasOutageThisWeek(addressNotice, '2026-08-24', 'Calle 70 # 5-20', 'Kennedy', 'Normandia')).toBe(false)
   })
 
   it('matches the selected neighborhood as a complete name, not as a substring', () => {
@@ -98,9 +98,14 @@ describe('outage logic', () => {
     }
     expect(addressWithinRange('Carrera 73A#49A-31', notice.addressRange)).toBe(true)
     expect(noticeIncludesNeighborhood(notice, 'Normandía')).toBe(false)
-    expect(noticeAppliesToAddress(notice, '2026-10-05', 'Carrera 73A#49A-31', 'Normandía')).toBe(false)
+    expect(noticeAppliesToAddress(notice, '2026-10-05', 'Carrera 73A#49A-31', 'Engativá', 'Normandía')).toBe(false)
     expect(noticeIncludesNeighborhood(notice, 'Sierra Morena')).toBe(true)
     expect(noticeIncludesNeighborhood({ ...notice, barrios: 'Normandia Occidental' }, 'Normandia')).toBe(false)
+    expect(noticeMatchesProfile(notice, 'Carrera 73A#49A-31', 'Chapinero', 'Normandía')).toBe(false)
+    expect(noticeMatchesProfile(notice, 'Carrera 73A#49A-31', 'Engativá', 'Normandía')).toBe(false)
+    expect(noticeMatchesProfile(notice, 'Carrera 73A#49A-31', 'Engativá', 'Sierra Morena')).toBe(true)
+    expect(noticeMatchesProfile(notice, 'Carrera 73A#49A-31', 'Ciudad Bolívar', 'Sierra Morena')).toBe(true)
+    expect(noticeMatchesProfile(notice, 'Carrera 73A#49A-31', 'Ciudad Bolívar', 'Normandía')).toBe(true)
   })
 
   it('extracts distinct neighborhood names from a bulletin string', () => {

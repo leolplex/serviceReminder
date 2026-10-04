@@ -8,7 +8,7 @@ Aplicación para consultar cortes de agua del Acueducto de Bogotá según una di
 - Busca los avisos por fecha y rango de dirección en todas las localidades, porque el boletín puede etiquetar un corte con una localidad incorrecta.
 - Envía un correo al activar la suscripción y cuando corresponde un aviso.
 - Guarda los datos y puede instalarse como PWA.
-- Filtra los avisos por dirección y por coincidencia exacta del barrio para evitar falsos positivos.
+- Filtra los avisos cuando coincide el rango de dirección y coincide la localidad o el barrio indicado.
 
 ## Desarrollo
 
@@ -59,4 +59,4 @@ alter table public.email_sends enable row level security;
 
 La clave de servicio de Supabase debe estar configurada como el secret `SUPABASE_SECRET_KEY` en GitHub Actions; no uses la clave publicable para este workflow.
 
-El selector de barrios usa los nombres únicos de sectores catastrales urbanos y mixtos de [Catastro Bogotá](https://datosabiertos.bogota.gov.co/dataset/sector-catastral), complementados con nombres de barrio conocidos que no aparecen en ese catálogo (por ejemplo, La Floresta). La coincidencia con barrios del boletín ignora mayúsculas, tildes y prefijos como “Barrio”, pero requiere el nombre completo.
+El selector de barrios usa los nombres únicos de sectores catastrales urbanos y mixtos de [Catastro Bogotá](https://datosabiertos.bogota.gov.co/dataset/sector-catastral), complementados con nombres de barrio conocidos que no aparecen en ese catálogo (por ejemplo, La Floresta). La coincidencia con barrios del boletín ignora mayúsculas, tildes y prefijos como “Barrio”, pero requiere el nombre completo. Un aviso coincide si su rango incluye la dirección y además coincide la localidad o el barrio, lo que tolera localidad mal etiquetada cuando el barrio sí coincide.

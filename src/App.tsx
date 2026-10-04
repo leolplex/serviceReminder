@@ -56,8 +56,8 @@ function App() {
   const visibleSyncStatus = addressIncomplete ? (localidad ? 'Dirección incompleta' : 'Sin consultar') : syncStatus
   const localNotices = useMemo(() => {
     if (addressIncomplete) return []
-    return notices.filter((notice) => upcomingWeekStarts.some((start) => noticeAppliesToAddress(notice, start, address, barrio)))
-  }, [address, addressIncomplete, barrio, notices, upcomingWeekStarts])
+    return notices.filter((notice) => upcomingWeekStarts.some((start) => noticeAppliesToAddress(notice, start, address, localidad, barrio)))
+  }, [address, addressIncomplete, barrio, localidad, notices, upcomingWeekStarts])
   const neighborhoodOptions = useMemo(() =>
     barrio && !BARRIOS_BOGOTA.some((value) => normalizeNeighborhood(value) === normalizeNeighborhood(barrio))
       ? [barrio, ...BARRIOS_BOGOTA]
@@ -72,7 +72,7 @@ function App() {
       const fetchedNotices = await outageSource.fetch(LOCALIDADES)
       setNotices(fetchedNotices)
       setSyncStatus(`${fetchedNotices.length} avisos encontrados`)
-      const matchingNotices = fetchedNotices.filter((notice) => noticeAppliesToAddress(notice, weekStart, address, barrio))
+      const matchingNotices = fetchedNotices.filter((notice) => noticeAppliesToAddress(notice, weekStart, address, localidad, barrio))
       if (notificationsEnabled && matchingNotices.length > 0 && !await profileStore.hasSentNotification(weekStart)) {
         userNotifier.notify('Corte de agua en tu localidad', `Hay un corte para ${address}, en ${localidad}.`)
         await profileStore.markNotificationSent(weekStart)
@@ -195,7 +195,7 @@ function App() {
           <option value="">Elige un barrio...</option>
           {neighborhoodOptions.map((option) => <option key={option} value={option}>{option}</option>)}
         </select><span aria-hidden="true">⌄</span></div>
-        <p className="field-note">La lista se obtiene de los barrios publicados en el boletín. El aviso debe incluir tu barrio y coincidir con el rango de dirección.</p>
+        <p className="field-note">El aviso debe coincidir con tu rango de dirección y con tu localidad o barrio.</p>
         <label htmlFor="email">Email para avisos</label>
         <input className="address-input" id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="tu-correo@ejemplo.com" aria-describedby="email-note" />
         <p className="field-note" id="email-note">Activa o cancela el aviso semanal de cortes. Recibirás una confirmación por correo.</p>

@@ -118,19 +118,23 @@ export const hasOutageThisWeek = (
   notices: OutageNotice[],
   weekStart: string,
   address: string,
+  localidad: string,
   barrio: string,
 ) => {
-  return notices.some((notice) => noticeAppliesToAddress(notice, weekStart, address, barrio))
+  return notices.some((notice) => noticeAppliesToAddress(notice, weekStart, address, localidad, barrio))
 }
 
-/** Busca el corte por rango de dirección, sin depender de la localidad publicada. */
-export const noticeMatchesAddress = (notice: OutageNotice, address: string, barrio: string) =>
-  Boolean(address.trim() && barrio.trim())
+/** Exige rango de dirección y localidad o barrio para tolerar etiquetas incorrectas. */
+export const noticeMatchesProfile = (notice: OutageNotice, address: string, localidad: string, barrio: string) =>
+  Boolean(address.trim())
     && addressWithinRange(address, notice.addressRange ?? notice.detail)
-    && noticeIncludesNeighborhood(notice, barrio)
+    && (
+      (Boolean(localidad.trim()) && normalize(notice.localidad) === normalize(localidad))
+      || noticeIncludesNeighborhood(notice, barrio)
+    )
 
-export const noticeAppliesToAddress = (notice: OutageNotice, weekStart: string, address: string, barrio: string) =>
-  noticeMatchesAddress(notice, address, barrio)
+export const noticeAppliesToAddress = (notice: OutageNotice, weekStart: string, address: string, localidad: string, barrio: string) =>
+  noticeMatchesProfile(notice, address, localidad, barrio)
     && isDateInWeek(notice.date, weekStart)
 
 export const addressIsReady = (address: string) => address.trim().length >= 8
