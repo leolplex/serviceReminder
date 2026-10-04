@@ -6,7 +6,11 @@ Se aceptan reportes de seguridad para la versión más reciente desplegada desde
 
 ## Revisiones automatizadas
 
-GitHub Actions ejecuta CodeQL y `npm audit` al recibir pushes y pull requests, y vuelve a revisar las dependencias semanalmente. Los hallazgos de CodeQL se publican en la pestaña **Security** del repositorio; `npm audit` falla si encuentra vulnerabilidades de severidad moderada o superior.
+GitHub Actions ejecuta CodeQL y `npm audit` al recibir pushes y pull requests, y vuelve a revisar las dependencias semanalmente. En cada pull request, Dependency Review compara los cambios de dependencias con los avisos conocidos y publica un resumen; falla si encuentra una vulnerabilidad moderada o superior. Los hallazgos de CodeQL se publican en la pestaña **Security** del repositorio; `npm audit` falla si encuentra vulnerabilidades de severidad moderada o superior.
+
+## Security Advisories
+
+Las vulnerabilidades confirmadas se gestionarán mediante GitHub Security Advisories. Los detalles se mantendrán privados durante la investigación y la coordinación de una corrección o mitigación; después podrán publicarse como un aviso de seguridad.
 
 ## Cómo reportar una vulnerabilidad
 
