@@ -3,6 +3,7 @@ import type { Profile, ProfileStore, Scheduler, UserNotifier } from './ports'
 const keys = {
   localidad: 'service-reminder-localidad',
   address: 'service-reminder-address',
+  barrio: 'service-reminder-barrio',
   email: 'service-reminder-email',
 }
 
@@ -39,6 +40,7 @@ export class LocalStorageProfileStore implements ProfileStore {
     return {
       localidad: this.storage.getItem(keys.localidad) ?? undefined,
       address: this.storage.getItem(keys.address) ?? undefined,
+      barrio: this.storage.getItem(keys.barrio) ?? undefined,
       email: this.storage.getItem(keys.email) ?? undefined,
     }
   }

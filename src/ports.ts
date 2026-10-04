@@ -3,6 +3,7 @@ import type { OutageNotice } from './outageLogic'
 export type Profile = {
   localidad: string
   address: string
+  barrio: string
   email: string
 }
 

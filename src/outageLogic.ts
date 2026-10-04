@@ -63,6 +63,31 @@ export const addressWithinRange = (address: string, detail = '') => {
     && numbers.carrera >= carreraRange[0] && numbers.carrera <= carreraRange[1]
 }
 
+export const neighborhoodsInNotice = (barrios = '') => {
+  const normalizedList = barrios.replace(/\b(?:bogot[aá]|soacha)\s*:\s*/gi, ',')
+  const seen = new Set<string>()
+  return normalizedList
+    .split(/[,;]|\s+y\s+/i)
+    .map((item) => item.trim())
+    .filter((item) => {
+      const key = normalize(item)
+      if (!key || seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+}
+
+export const normalizeNeighborhood = (value: string) =>
+    normalize(value)
+      .replace(/\b(?:bogota|soacha)\s*:\s*/g, ' ')
+      .replace(/^(?:barrio|sector)\s+/, '')
+      .replace(/[\s.,;:/-]+/g, ' ')
+      .trim()
+
+export const noticeIncludesNeighborhood = (notice: OutageNotice, barrio: string) =>
+    Boolean(barrio.trim())
+      && neighborhoodsInNotice(notice.barrios).some((item) => normalizeNeighborhood(item) === normalizeNeighborhood(barrio))
+
 export const bulletinMentionsLocalidad = (bulletin: string, localidad: string) => {
   if (!bulletin.trim() || !localidad.trim()) return false
   return normalize(bulletin).includes(normalize(localidad))
@@ -92,17 +117,20 @@ export const weekStartOf = (dateValue: string) => {
 export const hasOutageThisWeek = (
   notices: OutageNotice[],
   weekStart: string,
-  address = '',
+  address: string,
+  barrio: string,
 ) => {
-  return notices.some((notice) => noticeAppliesToAddress(notice, weekStart, address))
+  return notices.some((notice) => noticeAppliesToAddress(notice, weekStart, address, barrio))
 }
 
 /** Busca el corte por rango de dirección, sin depender de la localidad publicada. */
-export const noticeMatchesAddress = (notice: OutageNotice, address = '') =>
-  !address || addressWithinRange(address, notice.addressRange ?? notice.detail)
+export const noticeMatchesAddress = (notice: OutageNotice, address: string, barrio: string) =>
+  Boolean(address.trim() && barrio.trim())
+    && addressWithinRange(address, notice.addressRange ?? notice.detail)
+    && noticeIncludesNeighborhood(notice, barrio)
 
-export const noticeAppliesToAddress = (notice: OutageNotice, weekStart: string, address = '') =>
-  noticeMatchesAddress(notice, address)
+export const noticeAppliesToAddress = (notice: OutageNotice, weekStart: string, address: string, barrio: string) =>
+  noticeMatchesAddress(notice, address, barrio)
     && isDateInWeek(notice.date, weekStart)
 
 export const addressIsReady = (address: string) => address.trim().length >= 8

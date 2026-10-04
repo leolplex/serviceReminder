@@ -4,7 +4,8 @@ import { emailIsValid } from './emailService'
 import { emailNotifier, outageSource, profileStore, scheduler, userNotifier } from './norityServices'
 import { CastleMark } from './CastleMark'
 import { LOCALIDADES } from './localidades'
-import { addressIsReady, noticeAppliesToAddress, weekStartOf, type OutageNotice } from './outageLogic'
+import { BARRIOS_BOGOTA } from './barriosBogota'
+import { addressIsReady, normalizeNeighborhood, noticeAppliesToAddress, weekStartOf, type OutageNotice } from './outageLogic'
 
 const currentMonday = () => weekStartOf(new Date().toISOString().slice(0, 10))
 
@@ -20,6 +21,7 @@ type Feedback = { type: 'success' | 'error'; message: string }
 function App() {
   const [localidad, setLocalidad] = useState('')
   const [address, setAddress] = useState('')
+  const [barrio, setBarrio] = useState('')
   const [email, setEmail] = useState('')
   const [profileLoaded, setProfileLoaded] = useState(false)
   const [notificationsEnabled, setNotificationsEnabled] = useState(() => localStorage.getItem('service-reminder-notifications') === 'true')
@@ -40,21 +42,27 @@ function App() {
     void profileStore.load().then((profile) => {
       setLocalidad(profile.localidad ?? '')
       setAddress(profile.address ?? '')
+      setBarrio(profile.barrio ?? '')
       setEmail(profile.email ?? '')
       setProfileLoaded(true)
     }).catch(() => setProfileLoaded(true))
   }, [])
 
   useEffect(() => {
-    if (profileLoaded && !activationInProgress) void profileStore.save({ localidad, address, email })
-  }, [activationInProgress, address, email, localidad, profileLoaded])
+    if (profileLoaded && !activationInProgress) void profileStore.save({ localidad, address, barrio, email })
+  }, [activationInProgress, address, barrio, email, localidad, profileLoaded])
 
   const addressIncomplete = !localidad || !addressIsReady(address)
   const visibleSyncStatus = addressIncomplete ? (localidad ? 'Dirección incompleta' : 'Sin consultar') : syncStatus
   const localNotices = useMemo(() => {
     if (addressIncomplete) return []
-    return notices.filter((notice) => upcomingWeekStarts.some((start) => noticeAppliesToAddress(notice, start, address)))
-  }, [address, addressIncomplete, notices, upcomingWeekStarts])
+    return notices.filter((notice) => upcomingWeekStarts.some((start) => noticeAppliesToAddress(notice, start, address, barrio)))
+  }, [address, addressIncomplete, barrio, notices, upcomingWeekStarts])
+  const neighborhoodOptions = useMemo(() =>
+    barrio && !BARRIOS_BOGOTA.some((value) => normalizeNeighborhood(value) === normalizeNeighborhood(barrio))
+      ? [barrio, ...BARRIOS_BOGOTA]
+      : BARRIOS_BOGOTA,
+  [barrio])
   const hasOutage = localNotices.length > 0
   const isSubscribed = Boolean(email.trim()) && emailIsValid(email)
 
@@ -64,7 +72,7 @@ function App() {
       const fetchedNotices = await outageSource.fetch(LOCALIDADES)
       setNotices(fetchedNotices)
       setSyncStatus(`${fetchedNotices.length} avisos encontrados`)
-      const matchingNotices = fetchedNotices.filter((notice) => noticeAppliesToAddress(notice, weekStart, address))
+      const matchingNotices = fetchedNotices.filter((notice) => noticeAppliesToAddress(notice, weekStart, address, barrio))
       if (notificationsEnabled && matchingNotices.length > 0 && !await profileStore.hasSentNotification(weekStart)) {
         userNotifier.notify('Corte de agua en tu localidad', `Hay un corte para ${address}, en ${localidad}.`)
         await profileStore.markNotificationSent(weekStart)
@@ -73,7 +81,7 @@ function App() {
       setSyncStatus('No se pudo consultar (revisa CORS o conexión)')
       notifyUser('error', 'No se pudo consultar el boletín de Acueducto.')
     }
-  }, [address, localidad, notificationsEnabled, weekStart])
+  }, [address, barrio, localidad, notificationsEnabled, weekStart])
 
   useEffect(() => {
     if (addressIncomplete) return
@@ -93,8 +101,8 @@ function App() {
   }
 
   const saveLocalidad = async () => {
-    if (!localidad || !addressIsReady(address) || !emailIsValid(email)) {
-      const message = 'Completa una dirección, localidad y correo válidos.'
+    if (!localidad || !addressIsReady(address) || !barrio || !emailIsValid(email)) {
+      const message = 'Completa una dirección, localidad, barrio y correo válidos.'
       setSyncStatus(message)
       notifyUser('error', message)
       return
@@ -104,7 +112,7 @@ function App() {
     const normalizedEmail = email.trim()
     setActivationInProgress(true)
     try {
-      await profileStore.save({ address: normalizedAddress, localidad, email: normalizedEmail })
+      await profileStore.save({ address: normalizedAddress, localidad, barrio, email: normalizedEmail })
       if (emailIsValid(normalizedEmail)) {
         await emailNotifier.sendTest(normalizedEmail, normalizedAddress, localidad)
         setSyncStatus(`Correo de prueba enviado a ${normalizedEmail}`)
@@ -136,7 +144,7 @@ function App() {
     const normalizedAddress = address.trim()
     setActivationInProgress(true)
     try {
-      await profileStore.save({ address: normalizedAddress, localidad, email: '' })
+      await profileStore.save({ address: normalizedAddress, localidad, barrio, email: '' })
       setEmail('')
       setSyncStatus('Suscripción cancelada')
       notifyUser('success', 'Suscripción cancelada.')
@@ -156,6 +164,7 @@ function App() {
       await unsubscribe()
       return
     }
+
     await saveLocalidad()
   }
 
@@ -181,10 +190,16 @@ function App() {
         <div className="select-wrap"><select id="localidad" value={localidad} onChange={(event) => setLocalidad(event.target.value)}><option value="">Elige una localidad...</option>{LOCALIDADES.map((item) => <option key={item} value={item}>{item}</option>)}</select><span aria-hidden="true">⌄</span></div>
         <label htmlFor="address">Dirección en Bogotá</label>
         <input className="address-input" id="address" value={address} onChange={(event) => setAddress(event.target.value)} placeholder="Ej. Calle 42 # 78-10" />
+        <label htmlFor="barrio">Barrio</label>
+        <div className="select-wrap"><select id="barrio" value={barrio} onChange={(event) => setBarrio(event.target.value)} required>
+          <option value="">Elige un barrio...</option>
+          {neighborhoodOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+        </select><span aria-hidden="true">⌄</span></div>
+        <p className="field-note">La lista se obtiene de los barrios publicados en el boletín. El aviso debe incluir tu barrio y coincidir con el rango de dirección.</p>
         <label htmlFor="email">Email para avisos</label>
         <input className="address-input" id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="tu-correo@ejemplo.com" aria-describedby="email-note" />
         <p className="field-note" id="email-note">Activa o cancela el aviso semanal de cortes. Recibirás una confirmación por correo.</p>
-        <button className="primary-button" type="button" disabled={activationInProgress || !localidad || !addressIsReady(address) || (!isSubscribed && !emailIsValid(email))} onClick={handleSubscription}>{activationInProgress ? (isSubscribed ? 'Cancelando suscripción...' : 'Activando suscripción...') : saved ? (isSubscribed ? '✓ Suscripción activa' : '✓ Suscripción cancelada') : (isSubscribed ? 'Darse de baja' : 'Activar suscripción')}</button>
+        <button className="primary-button" type="button" disabled={activationInProgress || !localidad || !addressIsReady(address) || (!isSubscribed && (!barrio || !emailIsValid(email)))} onClick={handleSubscription}>{activationInProgress ? (isSubscribed ? 'Cancelando suscripción...' : 'Activando suscripción...') : saved ? (isSubscribed ? '✓ Suscripción activa' : '✓ Suscripción cancelada') : (isSubscribed ? 'Darse de baja' : 'Activar suscripción')}</button>
       </section>
 
       <section className={`status-panel ${hasOutage ? 'alert' : ''}`} aria-live="polite">

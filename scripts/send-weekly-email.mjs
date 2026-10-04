@@ -21,7 +21,7 @@ const requireSupabaseOk = async (response, operation) => {
 }
 
 const snapshot = JSON.parse(await readFile('public/outages.json', 'utf8'))
-const profileResponse = await fetch(`${process.env.SUPABASE_URL}/rest/v1/profiles?select=email,address,localidad`, {
+const profileResponse = await fetch(`${process.env.SUPABASE_URL}/rest/v1/profiles?select=email,address,localidad,barrio`, {
 	 headers: supabaseHeaders(),
 })
 await requireSupabaseOk(profileResponse, 'GET public.profiles')
@@ -35,7 +35,7 @@ for (const profile of profiles) {
 	const applicable = snapshot.notices.filter((notice) => {
 		const noticeDate = new Date(`${notice.date}T12:00:00`)
 		return noticeDate >= start
-			&& noticeMatchesAddress(notice, profile.address)
+			&& noticeMatchesAddress(notice, profile.address, profile.barrio)
 	})
 	const weeks = [...new Set(applicable.map((notice) => weekStartOf(notice.date)))]
 	for (const week of weeks) {

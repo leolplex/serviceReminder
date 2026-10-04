@@ -15,6 +15,8 @@ describe('App (carcasa principal)', () => {
     // Paso 01: dirección
     expect(screen.getByLabelText('Localidad de Bogotá')).toBeInTheDocument()
     expect(screen.getByLabelText('Dirección en Bogotá')).toBeInTheDocument()
+    expect(screen.getByLabelText('Barrio')).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: 'Normandia' })).toBeInTheDocument()
     expect(screen.getByLabelText('Email para avisos')).toBeInTheDocument()
 
     // El campo de email describe la ayuda para suscribirse

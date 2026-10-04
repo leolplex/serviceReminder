@@ -3,10 +3,14 @@ create table public.profiles (
   email text not null,
   address text not null,
   localidad text not null,
+  barrio text not null default '',
   updated_at timestamptz not null default now()
 );
 
 alter table public.profiles enable row level security;
+
+alter table public.profiles
+add column if not exists barrio text not null default '';
 
 create policy "Users can read their own profile"
 on public.profiles for select

@@ -14,7 +14,7 @@ export class SupabaseProfileStore implements ProfileStore {
   async load() {
     if (!supabase) return {}
     const userId = await this.userId()
-    const { data, error } = await supabase.from('profiles').select('localidad,address,email').eq('user_id', userId).maybeSingle()
+    const { data, error } = await supabase.from('profiles').select('localidad,address,barrio,email').eq('user_id', userId).maybeSingle()
     if (error) throw error
     return (data ?? {}) as Partial<Profile>
   }

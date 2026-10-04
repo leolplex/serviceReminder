@@ -16,8 +16,8 @@ const memoryStorage = (): Storage => {
 describe('LocalStorageProfileStore', () => {
   it('persists the profile through the storage port', async () => {
     const store = new LocalStorageProfileStore(memoryStorage())
-    store.save({ localidad: 'Kennedy', address: 'Cra. 96I #51-99', email: 'ana@example.com' })
-    await expect(store.load()).resolves.toEqual({ localidad: 'Kennedy', address: 'Cra. 96I #51-99', email: 'ana@example.com' })
+    store.save({ localidad: 'Kennedy', address: 'Cra. 96I #51-99', barrio: 'Normandia', email: 'ana@example.com' })
+    await expect(store.load()).resolves.toEqual({ localidad: 'Kennedy', address: 'Cra. 96I #51-99', barrio: 'Normandia', email: 'ana@example.com' })
   })
 
   it('deduplicates email delivery by week', async () => {

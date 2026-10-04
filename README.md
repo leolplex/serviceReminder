@@ -8,6 +8,7 @@ Aplicación para consultar cortes de agua del Acueducto de Bogotá según una di
 - Busca los avisos por fecha y rango de dirección en todas las localidades, porque el boletín puede etiquetar un corte con una localidad incorrecta.
 - Envía un correo al activar la suscripción y cuando corresponde un aviso.
 - Guarda los datos y puede instalarse como PWA.
+- Filtra los avisos por dirección y por coincidencia exacta del barrio para evitar falsos positivos.
 
 ## Desarrollo
 
@@ -57,3 +58,5 @@ alter table public.email_sends enable row level security;
 ```
 
 La clave de servicio de Supabase debe estar configurada como el secret `SUPABASE_SECRET_KEY` en GitHub Actions; no uses la clave publicable para este workflow.
+
+El selector de barrios usa los nombres únicos de sectores catastrales urbanos y mixtos de [Catastro Bogotá](https://datosabiertos.bogota.gov.co/dataset/sector-catastral). La coincidencia con barrios del boletín ignora mayúsculas, tildes y prefijos como “Barrio”, pero requiere el nombre completo.
