@@ -34,20 +34,20 @@ const casos: ReturnType<typeof caseFor>[] = [
   caseFor('Sumapaz', 'De la Calle 1 Sur a la Calle 20 Sur, entre la Carrera 1 Este a la Carrera 10 Este', 'Calle 10 Sur # 5-20 Este', 'Calle 30 Sur # 5-20 Este'),
 ]
 
-describe('avisos por localidad (20 localidades de Bogotá)', () => {
+describe('avisos por dirección (20 localidades de Bogotá)', () => {
   it.each(casos.map(({ localidad }) => [localidad]))('soporta la nomenclatura de %s', (localidad) => {
     const caso = casos.find((item) => item.localidad === localidad)!
-    expect(noticeAppliesToAddress(caso.notice, caso.localidad, WEEK_START, caso.inAddress)).toBe(true)
-    expect(noticeAppliesToAddress(caso.notice, caso.localidad, WEEK_START, caso.outAddress)).toBe(false)
+    expect(noticeAppliesToAddress(caso.notice, WEEK_START, caso.inAddress)).toBe(true)
+    expect(noticeAppliesToAddress(caso.notice, WEEK_START, caso.outAddress)).toBe(false)
   })
 
-  it('no aplica un aviso de otra localidad aunque la dirección caiga en el rango', () => {
+  it('aplica el aviso si la dirección coincide aunque la localidad publicada sea distinta', () => {
     const caso = casos.find((item) => item.localidad === 'Engativá')!
-    expect(noticeAppliesToAddress(caso.notice, 'Kennedy', WEEK_START, caso.inAddress)).toBe(false)
+    expect(noticeAppliesToAddress({ ...caso.notice, localidad: 'Kennedy' }, WEEK_START, caso.inAddress)).toBe(true)
   })
 
   it('rechaza una dirección en la que no se distingue el eje de la vía', () => {
     const caso = casos.find((item) => item.localidad === 'Engativá')!
-    expect(noticeAppliesToAddress(caso.notice, 'Engativá', WEEK_START, 'Casa 123 # 45-67')).toBe(false)
+    expect(noticeAppliesToAddress(caso.notice, WEEK_START, 'Casa 123 # 45-67')).toBe(false)
   })
 })

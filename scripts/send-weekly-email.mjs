@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises'
-import { addressWithinRange, normalize, weekStartOf } from '../src/outageLogic.ts'
+import { noticeMatchesAddress, weekStartOf } from '../src/outageLogic.ts'
 
 const required = ['EMAILJS_SERVICE_ID', 'EMAILJS_TEMPLATE_ID', 'EMAILJS_PUBLIC_KEY', 'EMAILJS_PRIVATE_KEY', 'SUPABASE_URL', 'SUPABASE_SECRET_KEY']
 const missing = required.filter((name) => !process.env[name])
@@ -35,8 +35,7 @@ for (const profile of profiles) {
 	const applicable = snapshot.notices.filter((notice) => {
 		const noticeDate = new Date(`${notice.date}T12:00:00`)
 		return noticeDate >= start
-			&& normalize(notice.localidad).includes(normalize(profile.localidad))
-			&& addressWithinRange(profile.address, notice.addressRange ?? notice.detail ?? '')
+			&& noticeMatchesAddress(notice, profile.address)
 	})
 	const weeks = [...new Set(applicable.map((notice) => weekStartOf(notice.date)))]
 	for (const week of weeks) {
@@ -62,7 +61,7 @@ for (const profile of profiles) {
 				template_params: {
 					to_email: profile.email,
 					address: profile.address,
-					locality: notices[0].localidad,
+					locality: [...new Set(notices.map((notice) => notice.localidad))].join(', '),
 					outage_date: notices.map((notice) => notice.date).join(', '),
 					neighborhoods: notices.map((notice) => notice.barrios ?? 'Sector publicado por Acueducto').join(' | '),
 					hours: notices.map((notice) => notice.hours ?? 'Consultar fuente oficial').join(' | '),

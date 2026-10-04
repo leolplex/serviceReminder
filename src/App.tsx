@@ -53,8 +53,8 @@ function App() {
   const visibleSyncStatus = addressIncomplete ? (localidad ? 'Dirección incompleta' : 'Sin consultar') : syncStatus
   const localNotices = useMemo(() => {
     if (addressIncomplete) return []
-    return notices.filter((notice) => upcomingWeekStarts.some((start) => noticeAppliesToAddress(notice, localidad, start, address)))
-  }, [address, addressIncomplete, localidad, notices, upcomingWeekStarts])
+    return notices.filter((notice) => upcomingWeekStarts.some((start) => noticeAppliesToAddress(notice, start, address)))
+  }, [address, addressIncomplete, notices, upcomingWeekStarts])
   const hasOutage = localNotices.length > 0
   const isSubscribed = Boolean(email.trim()) && emailIsValid(email)
 
@@ -64,7 +64,7 @@ function App() {
       const fetchedNotices = await outageSource.fetch(LOCALIDADES)
       setNotices(fetchedNotices)
       setSyncStatus(`${fetchedNotices.length} avisos encontrados`)
-      const matchingNotices = fetchedNotices.filter((notice) => noticeAppliesToAddress(notice, localidad, weekStart, address))
+      const matchingNotices = fetchedNotices.filter((notice) => noticeAppliesToAddress(notice, weekStart, address))
       if (notificationsEnabled && matchingNotices.length > 0 && !await profileStore.hasSentNotification(weekStart)) {
         userNotifier.notify('Corte de agua en tu localidad', `Hay un corte para ${address}, en ${localidad}.`)
         await profileStore.markNotificationSent(weekStart)
@@ -189,13 +189,13 @@ function App() {
 
       <section className={`status-panel ${hasOutage ? 'alert' : ''}`} aria-live="polite">
         <div className="status-icon">{hasOutage ? '!' : '✓'}</div>
-        <div><p className="status-label">{hasOutage ? 'AVISO PARA TI' : 'ESTADO DE ESTA SEMANA'}</p><h2>{hasOutage ? `Hay un corte en ${localidad}` : localidad ? `Sin cortes para ${address || localidad}` : 'Guarda tu dirección para empezar'}</h2><p>{hasOutage ? `Tu dirección está en ${localidad}.` : 'Aquí aparecerán los cortes que coincidan con tu zona.'}</p></div>
+        <div><p className="status-label">{hasOutage ? 'AVISO PARA TI' : 'ESTADO DE ESTA SEMANA'}</p><h2>{hasOutage ? `Hay un corte en el rango de ${address}` : localidad ? `Sin cortes para ${address || localidad}` : 'Guarda tu dirección para empezar'}</h2><p>{hasOutage ? 'Tu dirección coincide con un rango publicado por el Acueducto.' : 'Aquí aparecerán los cortes que coincidan con tu zona.'}</p></div>
       </section>
 
       <section className="panel bulletin-panel">
         <div className="step-heading"><span className="step-number">02</span><div><h2>Boletín de esta semana</h2><p>Actualizado para hoy, {currentDateLabel()}</p></div></div>
         <p className="helper">Nority consulta la fuente oficial y muestra solo los barrios afectados.</p>
-        {localNotices.length > 0 ? <div className="notice-list">{localNotices.map((notice) => <article className="notice-card" key={`${notice.date}-${notice.localidad}-${notice.addressRange}`}><p className="notice-date">{new Date(`${notice.date}T12:00:00`).toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })}</p><h3>{notice.localidad}</h3><p><strong>Barrios:</strong> {notice.barrios || 'Sector indicado por Acueducto'}</p><p><strong>Horario:</strong> {notice.hours || 'Consultar en la fuente oficial'}</p><p><strong>Rango:</strong> {notice.addressRange || 'Consultar en la fuente oficial'}</p></article>)}</div> : <div className="empty-notices">Consulta Acueducto para ver los barrios afectados por tu dirección.</div>}
+        {localNotices.length > 0 ? <div className="notice-list">{localNotices.map((notice) => <article className="notice-card" key={`${notice.date}-${notice.localidad}-${notice.addressRange}`}><p className="notice-date">{new Date(`${notice.date}T12:00:00`).toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })}</p><h3>Localidad indicada por Acueducto: {notice.localidad}</h3><p><strong>Barrios:</strong> {notice.barrios || 'Sector indicado por Acueducto'}</p><p><strong>Horario:</strong> {notice.hours || 'Consultar en la fuente oficial'}</p><p><strong>Rango:</strong> {notice.addressRange || 'Consultar en la fuente oficial'}</p></article>)}</div> : <div className="empty-notices">Consulta Acueducto para ver los barrios afectados por tu dirección.</div>}
         <div className="button-row"><button className="secondary-button" type="button" onClick={() => void syncWithAcueducto()}>↻ Consultar Acueducto</button></div>
         <p className="sync-status" aria-live="polite">{visibleSyncStatus} · <a href={ACUEDUCTO_SOURCE_URL} target="_blank" rel="noreferrer">Ver fuente oficial</a></p>
         <p className="schedule-note">✉ El email semanal se envía automáticamente los viernes 7:00 p. m. (hora Bogotá) si tu dirección está en un rango. Las notificaciones del navegador solo se muestran con la app abierta. Aquí la consulta es manual.</p>

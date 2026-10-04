@@ -20,10 +20,10 @@ describe('outage logic', () => {
     expect(isDateInWeek('2026-09-01', '2026-08-24')).toBe(false)
   })
 
-  it('reports a cut only when locality and week both match', () => {
-    expect(hasOutageThisWeek('Kennedy: martes 25', 'Kennedy', notices, '2026-08-24')).toBe(true)
-    expect(hasOutageThisWeek('Kennedy: martes 25', 'Bosa', notices, '2026-08-24')).toBe(false)
-    expect(hasOutageThisWeek('Kennedy: martes 25', 'Kennedy', notices, '2026-08-31')).toBe(false)
+  it('reports a cut based on the address and week, not its locality label', () => {
+    expect(hasOutageThisWeek(notices, '2026-08-24')).toBe(true)
+    expect(hasOutageThisWeek([{ localidad: 'Kennedy', date: '2026-08-25', addressRange: 'De la Calle 42 a la Calle 61B, entre la Carrera 3 a la Carrera 9' }], '2026-08-24', 'Calle 50 # 5-20')).toBe(true)
+    expect(hasOutageThisWeek(notices, '2026-08-31')).toBe(false)
   })
 
   it('checks the address against the Calle and Carrera boundaries', () => {
@@ -65,7 +65,7 @@ describe('outage logic', () => {
       date: '2026-09-04',
       addressRange: 'De la Calle 26 a la Calle 63, entre la Carrera 68 a la Carrera 72',
     }
-    expect(noticeAppliesToAddress(notice, 'Engativá', '2026-08-31', 'Carrera 71#49A-31')).toBe(true)
+    expect(noticeAppliesToAddress(notice, '2026-08-31', 'Carrera 71#49A-31')).toBe(true)
   })
 
   it('shows a matching next-week notice in the UI when the current date is near the week boundary', () => {
@@ -75,12 +75,12 @@ describe('outage logic', () => {
       addressRange: 'De la Calle 26 a la Calle 63, entre la Carrera 68 a la Carrera 72',
     }
     const currentWeek = '2026-08-25'
-    expect(noticeAppliesToAddress(notice, 'Engativá', currentWeek, 'Carrera 71#49A-31')).toBe(false)
+    expect(noticeAppliesToAddress(notice, currentWeek, 'Carrera 71#49A-31')).toBe(false)
   })
 
   it('does not alert an address outside the published range', () => {
     const addressNotice: OutageNotice[] = [{ localidad: 'Kennedy', date: '2026-08-25', detail: 'De la Calle 42 a la Calle 61B, entre la Carrera 3 a la Carrera 9' }]
-    expect(hasOutageThisWeek('Kennedy: martes 25', 'Kennedy', addressNotice, '2026-08-24', 'Calle 50 # 5-20')).toBe(true)
-    expect(hasOutageThisWeek('Kennedy: martes 25', 'Kennedy', addressNotice, '2026-08-24', 'Calle 70 # 5-20')).toBe(false)
+    expect(hasOutageThisWeek(addressNotice, '2026-08-24', 'Calle 50 # 5-20')).toBe(true)
+    expect(hasOutageThisWeek(addressNotice, '2026-08-24', 'Calle 70 # 5-20')).toBe(false)
   })
 })

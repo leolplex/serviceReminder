@@ -5,7 +5,7 @@ Aplicación para consultar cortes de agua del Acueducto de Bogotá según una di
 ## Funciones
 
 - Consulta la programación semanal oficial.
-- Filtra los avisos por localidad y dirección.
+- Busca los avisos por fecha y rango de dirección en todas las localidades, porque el boletín puede etiquetar un corte con una localidad incorrecta.
 - Envía un correo al activar la suscripción y cuando corresponde un aviso.
 - Guarda los datos y puede instalarse como PWA.
 
