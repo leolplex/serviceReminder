@@ -59,4 +59,4 @@ alter table public.email_sends enable row level security;
 
 La clave de servicio de Supabase debe estar configurada como el secret `SUPABASE_SECRET_KEY` en GitHub Actions; no uses la clave publicable para este workflow.
 
-El selector de barrios usa los nombres únicos de sectores catastrales urbanos y mixtos de [Catastro Bogotá](https://datosabiertos.bogota.gov.co/dataset/sector-catastral). La coincidencia con barrios del boletín ignora mayúsculas, tildes y prefijos como “Barrio”, pero requiere el nombre completo.
+El selector de barrios usa los nombres únicos de sectores catastrales urbanos y mixtos de [Catastro Bogotá](https://datosabiertos.bogota.gov.co/dataset/sector-catastral), complementados con nombres de barrio conocidos que no aparecen en ese catálogo (por ejemplo, La Floresta). La coincidencia con barrios del boletín ignora mayúsculas, tildes y prefijos como “Barrio”, pero requiere el nombre completo.

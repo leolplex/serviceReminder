@@ -485,6 +485,7 @@ export const BARRIOS_BOGOTA = [
   "La Favorita",
   "La Fiscala",
   "La Fiscala Norte",
+  "La Floresta",
   "La Florida Occidental",
   "La Fragua",
   "La Fraguita",
