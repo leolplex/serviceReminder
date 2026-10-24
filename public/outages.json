@@ -1,125 +1,213 @@
 {
-  "updatedAt": "2026-10-17T02:21:05.014Z",
+  "updatedAt": "2026-10-24T02:41:55.539Z",
   "notices": [
     {
       "localidad": "Usaquén",
-      "date": "2026-10-19",
+      "date": "2026-10-26",
       "barrios": "Santa Helena, Victoria Norte, Prado Pinzón, Tarragona, Los Libertadores, Versalles, Mazurén, Reservas de La Colina, Colina Campestre Reservado, Colmedica Colina Campestre",
-      "addressRange": "De La Calle 147A a la Calle 153, entre la Avenida Carrera 45 a la Carrera 58",
+      "addressRange": "De la Calle 147A a la Calle 153, entre la Avenida Carrera 45 a la Carrera 58",
       "hours": "2:00 p.m. 4 horas",
-      "detail": "De La Calle 147A a la Calle 153, entre la Avenida Carrera 45 a la Carrera 58"
+      "detail": "De la Calle 147A a la Calle 153, entre la Avenida Carrera 45 a la Carrera 58"
     },
     {
-      "localidad": "Suba",
-      "date": "2026-10-20",
-      "barrios": "Casa Blanca Suba, Casa Blanca Suba Urbano",
-      "addressRange": "De la Carrera 45 a la Carrera 107, entre la Calle 223 a la Calle 242",
+      "localidad": "Engativá",
+      "date": "2026-10-27",
+      "barrios": "Álamos Sur, Aeropuerto",
+      "addressRange": "De la Calle 26 a la Calle 63, entre la Carrera 86 a la Carrera 14",
+      "hours": "9:00 a.m. 24 horas",
+      "detail": "De la Calle 26 a la Calle 63, entre la Carrera 86 a la Carrera 14"
+    },
+    {
+      "localidad": "Bosa",
+      "date": "2026-10-27",
+      "barrios": "Islandia, Gran Colombiano, Pacho Ancho, Antonia Santos, El Retazo",
+      "addressRange": "De la Calle 63 Sur a la Calle 66 Sur, entre la Carrera 81 a la Carrera 82 De la Calle 66 Sur a la Calle 70 Bis Sur, entre la Carrera 80N a la Carrera 82A De la Carrera 82A a la Carrera 86, entre la Calle 67B Sur a la Calle 71A Sur De la Carrera 79 a la Carrera 86, entre la Calle 70 Bis Sur a la Calle 71F Sur De la Transversal 79D a la Carrera 87, entre la Calle 71F Sur a la Avenida Calle 75 Sur",
       "hours": "10:00 a.m. 24 horas",
-      "detail": "De la Carrera 45 a la Carrera 107, entre la Calle 223 a la Calle 242"
+      "detail": "De la Calle 63 Sur a la Calle 66 Sur, entre la Carrera 81 a la Carrera 82 De la Calle 66 Sur a la Calle 70 Bis Sur, entre la Carrera 80N a la Carrera 82A De la Carrera 82A a la Carrera 86, entre la Calle 67B Sur a la Calle 71A Sur De la Carrera 79 a la Carrera 86, entre la Calle 70 Bis Sur a la Calle 71F Sur De la Transversal 79D a la Carrera 87, entre la Calle 71F Sur a la Avenida Calle 75 Sur"
+    },
+    {
+      "localidad": "Bosa",
+      "date": "2026-10-27",
+      "barrios": "Argelia, Bosa Central, Clarelandia, Jiménez de Quesada II Sector, La Azucena",
+      "addressRange": "De la Carrera 80 a la Carrera 82D, entre la Calle 58 Sur a la Calle 65 Sur",
+      "hours": "10:00 a.m. 24 horas",
+      "detail": "De la Carrera 80 a la Carrera 82D, entre la Calle 58 Sur a la Calle 65 Sur"
     },
     {
       "localidad": "Usaquén",
-      "date": "2026-10-20",
+      "date": "2026-10-27",
       "barrios": "Molinos Norte, Escuela de Infantería, Santa Ana Occidental",
       "addressRange": "De la Carrera 7 a la Carrera 14A, entre la Calle 100 a la Calle 116",
       "hours": "10:00 a.m. 24 horas",
       "detail": "De la Carrera 7 a la Carrera 14A, entre la Calle 100 a la Calle 116"
     },
     {
+      "localidad": "San Cristóbal",
+      "date": "2026-10-27",
+      "barrios": "Bosque Los Alpes, Altos de Zipa, Moralba, Altamira, Nueva Gloria, Puente Colorado",
+      "addressRange": "De la Carrera 10 Este a la Carrera 16 A Este, entre la Calle 36 H Sur a la Calle 54 Sur",
+      "hours": "8:00 a.m. 25 horas",
+      "detail": "De la Carrera 10 Este a la Carrera 16 A Este, entre la Calle 36 H Sur a la Calle 54 Sur"
+    },
+    {
+      "localidad": "San Cristóbal",
+      "date": "2026-10-27",
+      "barrios": "Juan Rey (La Paz)",
+      "addressRange": "De la Calle 62C Sur a la Calle 71A Sur, entre la Carrera 11B Este a la Carrera 15 Este",
+      "hours": "9:00 a.m. 24 horas",
+      "detail": "De la Calle 62C Sur a la Calle 71A Sur, entre la Carrera 11B Este a la Carrera 15 Este"
+    },
+    {
       "localidad": "Usme",
-      "date": "2026-10-20",
-      "barrios": "Puerta al Llano, El Portal del Divino, El Refugio, Portal Rural II, El Nuevo Portal II",
-      "addressRange": "De la Avenida Carrera 8 Este a la Carrera 6A Este, entre la Avenida Calle 110 Sur a la Calle 97B Sur",
-      "hours": "9:00 a.m. 24 horas",
-      "detail": "De la Avenida Carrera 8 Este a la Carrera 6A Este, entre la Avenida Calle 110 Sur a la Calle 97B Sur"
+      "date": "2026-10-27",
+      "barrios": "Tibaque II, San Pedro Sur, Tihuaque, Tihuaque Rural, Las Violetas, Juan José Rondon I, Los Soches, Villa Diana y Las Violetas",
+      "addressRange": "De la Calle 72F Sur a la Calle 92B Sur, entre la Carrera 12B Este a la Carrera 24A Este",
+      "hours": "10:00 a.m. 4 horas",
+      "detail": "De la Calle 72F Sur a la Calle 92B Sur, entre la Carrera 12B Este a la Carrera 24A Este"
     },
     {
-      "localidad": "Bosa",
-      "date": "2026-10-20",
-      "barrios": "Bosa Nova, Bosa Nova El Porvenir, Bosanova, Chicó Sur, El Paraiso Bosa, El Porvenir, Escocia, La Alegría, La Concepcion, La Esmeralda, La Estanzuela, La Independencia, La Paz, La Suerte, Los Sauces Bosa, Nueva Escocia, San Pablo, San Pedro, Tunjuelo, Veguita, Villa Clemencia, Villa Colonia, Villa Nohora, Villa Suaita, Tropezón",
-      "addressRange": "De la Calle 55 Sur a la Calle 57 Sur, entre la Carrera 86 a la Carrera 87C De la Calle 57 Sur a la Calle 58C Sur, entre la Carrera 84C a la Carrera 87K Bis De la Calle 58C Sur a la Calle 66 Sur, entre la Carrera 82 a la Carrera 88 De la Calle 66 Sur a la Calle 70 Sur, entre la Carrera 86 a la Carrera 87H De la Calle 62 Sur a la Calle 69B Sur, entre la Carrera 87C a la Carrera 88C De la Calle 69B Sur a la Calle 70 Sur, entre la Carrera 87K a la Carrera 88C",
+      "localidad": "Puente Aranda",
+      "date": "2026-10-27",
+      "barrios": "El Ejido, Industrial Centenario",
+      "addressRange": "De la Avenida Américas a la Avenida Calle 13, entre la Carrera 36 a la Carrera 50",
       "hours": "10:00 a.m. 24 horas",
-      "detail": "De la Calle 55 Sur a la Calle 57 Sur, entre la Carrera 86 a la Carrera 87C De la Calle 57 Sur a la Calle 58C Sur, entre la Carrera 84C a la Carrera 87K Bis De la Calle 58C Sur a la Calle 66 Sur, entre la Carrera 82 a la Carrera 88 De la Calle 66 Sur a la Calle 70 Sur, entre la Carrera 86 a la Carrera 87H De la Calle 62 Sur a la Calle 69B Sur, entre la Carrera 87C a la Carrera 88C De la Calle 69B Sur a la Calle 70 Sur, entre la Carrera 87K a la Carrera 88C"
+      "detail": "De la Avenida Américas a la Avenida Calle 13, entre la Carrera 36 a la Carrera 50"
     },
     {
-      "localidad": "Usaquén",
-      "date": "2026-10-21",
-      "barrios": "Cedro Narvaes, Cedro Golf",
-      "addressRange": "De la Carrera 7 a la Carrera 9, entre la Calle 140 a la Calle 147",
-      "hours": "10:00 a.m. 24 horas",
-      "detail": "De la Carrera 7 a la Carrera 9, entre la Calle 140 a la Calle 147"
-    },
-    {
-      "localidad": "Chapinero",
-      "date": "2026-10-21",
-      "barrios": "Chapinero",
-      "addressRange": "De la Calle 53 a la Calle 72, entre la Carrera 7 a la Carrera 14",
+      "localidad": "Engativá",
+      "date": "2026-10-28",
+      "barrios": "Engativá Pueblo",
+      "addressRange": "De la Calle 72 a la Calle 63, entre la Carrera 117 a la Carrera 127",
       "hours": "9:00 a.m. 24 horas",
-      "detail": "De la Calle 53 a la Calle 72, entre la Carrera 7 a la Carrera 14"
+      "detail": "De la Calle 72 a la Calle 63, entre la Carrera 117 a la Carrera 127"
     },
     {
-      "localidad": "Ciudad Bolívar",
-      "date": "2026-10-21",
-      "barrios": "Las Delicias",
-      "addressRange": "De la Avenida Calle 45A Sur a la Calle 40 Sur, entre la Avenida Carrera 72 a la Carrera 53",
-      "hours": "9:00 a.m. 24 horas",
-      "detail": "De la Avenida Calle 45A Sur a la Calle 40 Sur, entre la Avenida Carrera 72 a la Carrera 53"
+      "localidad": "Fontibón",
+      "date": "2026-10-28",
+      "barrios": "Salitre Occidental, Granjas de Techo",
+      "addressRange": "De la Calle 22A a la Avenida Calle 13, entre la Avenida Carrera 68 a la Carrera 68D",
+      "hours": "7:00 a.m. 27 horas",
+      "detail": "De la Calle 22A a la Avenida Calle 13, entre la Avenida Carrera 68 a la Carrera 68D"
     },
     {
       "localidad": "Kennedy",
-      "date": "2026-10-21",
-      "barrios": "Tocarema, Jacqueline",
-      "addressRange": "De la Calle 43 Sur a la Calle 53 Sur, entre la Transversal 78H Bis a la Carrera 77X",
+      "date": "2026-10-28",
+      "barrios": "Los Cristales Asturias, Camilo Torres Kennedy, Carimagua, Carvajal, Carvajal Osorio, Ciudad Kennedy, Lucerna, Provivienda Occidental, Santa Mónica, Tangarife",
+      "addressRange": "De la Calle 40 Sur a la Calle 26 Sur, entre la Avenida Carrera 72 a la Carrera 73",
       "hours": "10:00 a.m. 24 horas",
-      "detail": "De la Calle 43 Sur a la Calle 53 Sur, entre la Transversal 78H Bis a la Carrera 77X"
+      "detail": "De la Calle 40 Sur a la Calle 26 Sur, entre la Avenida Carrera 72 a la Carrera 73"
     },
     {
-      "localidad": "Ciudad Bolívar",
-      "date": "2026-10-21",
-      "barrios": "Bellavista Lucero Alto, Casa de Teja, Cedritos del Sur, Compartir, Estrella del Sur, Gibraltar Sur, Juan Pablo II, Lucero del Sur, Quiba, Quiba I, Quintas del Sur, San Rafael, Sumapaz, arabia, Bella Flor Sur, Bellavista Lucero Alto, Cedritos del Sur, El Minuto de María, El Mirador, El Mochuelo, El Mochuelo II, El Mochuelo II Norte, El Mochuelo II Urbano, El Mochuelo III, El Mochuelo Oriental, El Tesoro, Estrella del Sur, Juan Pablo II, Naciones Unidas, Quiba, Quiba I, Quiba Rural, Quiba Urbano, San Rafael, Sumapaz, Villa Gloria, Villas El Diamante, Bella Flor Sur, Bella Flor Sur Rural, Brisas del Volador, Ciudad Bolívar Rural III, Cordillera del Sur, El Mirador, El Mirador II, El Mochuelo III, El Mochuelo IV, El Tesoro, La Torre, Los Alpes Sur, Naciones Unidas, Nueva Esperanza, Paraiso Quiba, Quiba Bajo, Villa Gloria",
-      "addressRange": "De La Calle 65 Sur a la Calle 80A Sur, entre la Carrera 14A a la Carrera 26",
+      "localidad": "Kennedy",
+      "date": "2026-10-28",
+      "barrios": "Abastos, María Paz, Llano Grande",
+      "addressRange": "De la Calle 3 a la Calle 40B Sur, entre la Carrera 79 a la Avenida Carrera 86",
       "hours": "10:00 a.m. 24 horas",
-      "detail": "De La Calle 65 Sur a la Calle 80A Sur, entre la Carrera 14A a la Carrera 26"
-    },
-    {
-      "localidad": "Los Mártires",
-      "date": "2026-10-21",
-      "barrios": "Samper Mendoza, Teusaquillo, Paloquemao, Armenia, San Luis, Quesada, Palermo",
-      "addressRange": "De La Calle 15 A La Calle 60, entre la Carrera 13 a la Carrera 18",
-      "hours": "2:00 p.m. 4 horas",
-      "detail": "De La Calle 15 A La Calle 60, entre la Carrera 13 a la Carrera 18"
-    },
-    {
-      "localidad": "Tunjuelito",
-      "date": "2026-10-22",
-      "barrios": "San Benito, San Carlos, Tunjuelito, Abraham Lincoln",
-      "addressRange": "De la Carrera 7 a la Avenida Carrera 19C, entre la Diagonal 48 Sur a la Avenida Calle 61 Sur",
-      "hours": "9:00 a.m. 24 horas",
-      "detail": "De la Carrera 7 a la Avenida Carrera 19C, entre la Diagonal 48 Sur a la Avenida Calle 61 Sur"
-    },
-    {
-      "localidad": "Tunjuelito",
-      "date": "2026-10-22",
-      "barrios": "Samoré, Fatima",
-      "addressRange": "De la Carrera 28 a la Carrera 36, entre la Avenida Calle 44 Sur a la Calle 51B Sur",
-      "hours": "9:00 a.m. 24 horas",
-      "detail": "De la Carrera 28 a la Carrera 36, entre la Avenida Calle 44 Sur a la Calle 51B Sur"
+      "detail": "De la Calle 3 a la Calle 40B Sur, entre la Carrera 79 a la Avenida Carrera 86"
     },
     {
       "localidad": "Bosa",
-      "date": "2026-10-22",
-      "barrios": "Betania, Brasil, Brasilia, Chicalá, Danubio Azul, El Portal del Brasil, Las Margaritas, Osorio X Urbano, Parcela El Porvenir, Portal del Brasil, Transmilenio, Villa Anny",
-      "addressRange": "De la Avenida Calle 43 Sur a la Calle 56 Sur, entre la Avenida Carrera 86 a la Avenida Carrera 89B",
+      "date": "2026-10-28",
+      "barrios": "Piamonte",
+      "addressRange": "De la Calle 71A Sur a la Calle 73B Sur, entre la Carrera 82 a la Carrera 84",
       "hours": "10:00 a.m. 24 horas",
-      "detail": "De la Avenida Calle 43 Sur a la Calle 56 Sur, entre la Avenida Carrera 86 a la Avenida Carrera 89B"
+      "detail": "De la Calle 71A Sur a la Calle 73B Sur, entre la Carrera 82 a la Carrera 84"
     },
     {
-      "localidad": "Santa Fe",
-      "date": "2026-10-22",
-      "barrios": "San Bernardo, La Hortúa, Policarpa, Sevilla, Ciudad Berna, Calvo Sur, Nariño Sur, Caracas, Ciudad Jardín Sur, Sociego Serafina, San Luis Sur",
-      "addressRange": "De la Avenida Calle 6 a la Avenida Calle 1, entre la Carrera 10 a la Avenida Carrera 14 De La Avenida Calle 1 a la Calle 63 Sur, entre la Carrera 8 a la Carrera 12D",
+      "localidad": "Usaquén",
+      "date": "2026-10-28",
+      "barrios": "Cedritos, Cedro Narváez, Acacias Usaquén, Los Cedros Oriental",
+      "addressRange": "De la Carrera 7 a la Carrera 9, entre la Calle 140 a la Calle 148",
       "hours": "10:00 a.m. 24 horas",
-      "detail": "De la Avenida Calle 6 a la Avenida Calle 1, entre la Carrera 10 a la Avenida Carrera 14 De La Avenida Calle 1 a la Calle 63 Sur, entre la Carrera 8 a la Carrera 12D"
+      "detail": "De la Carrera 7 a la Carrera 9, entre la Calle 140 a la Calle 148"
+    },
+    {
+      "localidad": "Ciudad Bolívar",
+      "date": "2026-10-28",
+      "barrios": "Quiba, Estrella del Sur, Quintas del Sur, Lucero del Sur, Casa de Teja, Quiba, El Mochuelo II, El Mochuelo III, Quiba Rural, Quiba Urbano, El Minuto de María, El Mochuelo II Urbano, El Mochuelo, Quiba, El Mochuelo Oriental, Casa de Teja",
+      "addressRange": "De la Calle 69C Sur a la Calle 82 D Sur, entre la Avenida Boyacá a la Carrera 18H",
+      "hours": "8:00 a.m. 24 horas",
+      "detail": "De la Calle 69C Sur a la Calle 82 D Sur, entre la Avenida Boyacá a la Carrera 18H"
+    },
+    {
+      "localidad": "Fontibón",
+      "date": "2026-10-28",
+      "barrios": "Salitre Occidental y Granjas de Techo",
+      "addressRange": "De la Calle 22A a la Avenida Calle 13, entre la Avenida Carrera 68 a la Carrera 68D",
+      "hours": "10:00 a.m. 24 horas",
+      "detail": "De la Calle 22A a la Avenida Calle 13, entre la Avenida Carrera 68 a la Carrera 68D"
+    },
+    {
+      "localidad": "Kennedy",
+      "date": "2026-10-28",
+      "barrios": "Villa Alsacia, El Vergel, Bavaria, Castilla, Pio XII, Ciudad Techo, Las Dos Avenidas, Tintalá, Valladolid, El Vergel, Sabana Grande, El Chanco, La Magdalena, Zona Franca",
+      "addressRange": "De la Calle 7 a la Calle 13, entre la Avenida Boyacá al Rio Bogotá",
+      "hours": "1:00 p.m. 4 horas",
+      "detail": "De la Calle 7 a la Calle 13, entre la Avenida Boyacá al Rio Bogotá"
+    },
+    {
+      "localidad": "Engativá",
+      "date": "2026-10-29",
+      "barrios": "Álamos Norte, Garcés Navas",
+      "addressRange": "De la Calle 72 a la Calle 80, entre la Carrera 96 a la Carrera 110",
+      "hours": "9:00 a.m. 24 horas",
+      "detail": "De la Calle 72 a la Calle 80, entre la Carrera 96 a la Carrera 110"
+    },
+    {
+      "localidad": "Bosa",
+      "date": "2026-10-29",
+      "barrios": "Alameda del Parque, Carbonel, Carlos Albán, Charles de Gaulle, El Palmar, Israelitas, José María Carbonel, La Despensa, Nueva Granada Bosa, Villa Anny II, Villas del Velero",
+      "addressRange": "De la Carrera 77G a la Transversal 79D, entre la Calle 69B Sur a la Diagonal 73F Sur",
+      "hours": "10:00 a.m. 24 horas",
+      "detail": "De la Carrera 77G a la Transversal 79D, entre la Calle 69B Sur a la Diagonal 73F Sur"
+    },
+    {
+      "localidad": "Kennedy",
+      "date": "2026-10-29",
+      "barrios": "Cementerio Jardines Apogeo, El Rubí, Kennedy Los Sauces, La Cecilia, Prados de Kennedy, Roma Calle 56 Sur",
+      "addressRange": "De la Diagonal 57B Bis Sur a la Calle 58 Bis Sur, entre la Carrera 79 a la Carrera 79C De la Calle 56A Sur a la Calle 58G Sur, entre la Carrera 78 a la Carrera 79 De la Carrera 78 a la Carrera 77G Bis, entre la Calle 57C Sur a la Calle 58G Sur",
+      "hours": "10:00 a.m. 24 horas",
+      "detail": "De la Diagonal 57B Bis Sur a la Calle 58 Bis Sur, entre la Carrera 79 a la Carrera 79C De la Calle 56A Sur a la Calle 58G Sur, entre la Carrera 78 a la Carrera 79 De la Carrera 78 a la Carrera 77G Bis, entre la Calle 57C Sur a la Calle 58G Sur"
+    },
+    {
+      "localidad": "Usaquén",
+      "date": "2026-10-29",
+      "barrios": "Lisboa, Cedritos, Cedro Narváez, Acacias Usaquén, Caobos Salazar",
+      "addressRange": "De la Carrera 9 a la Carrera 15, entre la Calle 134 a la Calle 147",
+      "hours": "10:00 a.m. 24 horas",
+      "detail": "De la Carrera 9 a la Carrera 15, entre la Calle 134 a la Calle 147"
+    },
+    {
+      "localidad": "Ciudad Bolívar",
+      "date": "2026-10-29",
+      "barrios": "Sierra Morena, Ismael Perdomo, Peñón del Cortijo",
+      "addressRange": "De la Carrera 71A a la Transversal 73M, entre la Calle 65 Sur a la Calle 54 Sur",
+      "hours": "8:00 a.m. 24 horas",
+      "detail": "De la Carrera 71A a la Transversal 73M, entre la Calle 65 Sur a la Calle 54 Sur"
+    },
+    {
+      "localidad": "Rafael Uribe Uribe",
+      "date": "2026-10-29",
+      "barrios": "Los Molinos, Marruecos",
+      "addressRange": "De la Carrera 5L a la Carrera 6, entre la Diagonal 48F Sur a la Calle 48D Sur",
+      "hours": "9:00 a.m. 24 horas",
+      "detail": "De la Carrera 5L a la Carrera 6, entre la Diagonal 48F Sur a la Calle 48D Sur"
+    },
+    {
+      "localidad": "Bosa",
+      "date": "2026-10-29",
+      "barrios": "Balcanes, Zona Industrial Cazuca, Quintanares, San Mateo, Terreros, Hospital Cardio Vascular, San Humberto, San Carlos, Cien Familias, Tequendama, El Altico, La Florida",
+      "addressRange": "De la Calle 60 a la Calle 30 Sur, entre la Carrera 4 a la Carrera 40 Este de Soacha",
+      "hours": "10:00 p.m. 8 horas",
+      "detail": "De la Calle 60 a la Calle 30 Sur, entre la Carrera 4 a la Carrera 40 Este de Soacha"
+    },
+    {
+      "localidad": "Puente Aranda",
+      "date": "2026-10-30",
+      "barrios": "Centro Industrial",
+      "addressRange": "De la Carrera 60 a la Carrera 68, entre la Avenida Calle 13 a la Avenida Calle 22",
+      "hours": "7:00 a.m. 27 horas",
+      "detail": "De la Carrera 60 a la Carrera 68, entre la Avenida Calle 13 a la Avenida Calle 22"
     }
   ]
 }
