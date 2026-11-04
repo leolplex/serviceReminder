@@ -1,0 +1,6 @@
+{
+  "name": "deepmerge",
+  "version": "4.99.0",
+  "main": "index.js",
+  "license": "MIT"
+}
